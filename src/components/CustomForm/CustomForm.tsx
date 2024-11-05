@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import styles from "./customForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import Card from '../Card/Card';
@@ -12,6 +12,8 @@ type CustomProps = {
 };
 
 const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
+    const [isFlipped, setIsFlipped] = useState(false)
+
     const [values, setValues] = React.useState({
         cardNumber: '',
         cardExpirationDate: '',
@@ -69,7 +71,13 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
                     <div className={styles.formBody}>
                         <div className={styles.formContent}>
                             <div className={styles.formCardContainer}>
-                                <Card />
+                                <Card
+                                    isFlipped={isFlipped}
+                                    number={values.cardNumber}
+                                    cvv={values.cardCvv}
+                                    owner={`${values.cardFirstname} ${values.cardLastname}`}
+                                    brand='Amex'
+                                    />
                             </div>
                             <div className={styles.formInfoCard}>
                                 <InputGroup
@@ -100,7 +108,10 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
                                         value={values.cardCvv}
                                         error={errors.cardCvv}
                                         callbackOnChange={handleInputChange}
-                                        maxLength={50} />
+                                        maxLength={50}
+                                        onFocus={() => setIsFlipped(true)}
+                                        onBlur={() => setIsFlipped(false)}
+                                    />
 
                                 </div>
                                 <div className={styles.formRow}>
