@@ -1,0 +1,115 @@
+.inputContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+.inputContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.inputLabel {
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+    color: #64706C;
+    font-weight: 600;
+    text-align: left;
+}
+
+.inputFieldContainer {
+    display: flex;
+    width: 100%;
+    border-radius: 8px;
+    border: 1.5px solid #D0D6D4;
+}
+
+.inputFieldDateContainer {
+    height: 56px;
+}
+
+.inputFieldIcon {
+    display: grid;
+    place-items: center;
+    padding-left: 16px;
+}
+
+.inputFieldIconImg {
+    display: grid;
+    place-items: center;
+    padding-left: 16px;
+    object-fit: contain;
+}
+
+.inputField {
+    display: flex;
+    padding: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.inputFieldWithIcon {
+    padding-left: 8px;
+}
+
+.inputField:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.inputIconContainer {
+    padding-right: 20px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.inputErrorContainer {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0 8px;
+}
+
+.inputError {
+    color: gray;
+    animation: errorIn .3s ease forwards;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.inputSpanMessage {
+    color: #7C7C7C;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.inputFieldError {
+    border: 1.5px solid #C82014;
+}
+
+@keyframes errorIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

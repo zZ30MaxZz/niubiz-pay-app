@@ -1,0 +1,37 @@
+.card {
+    height: 160px;
+    width: 280px;
+    border-radius: 8px;
+    background-color: #EEE;
+    text-align: left;
+    display: flex;
+    align-items: flex-end;
+}
+
+.cardNumber {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    margin-bottom: 16px;
+}
+
+.cardDate {
+    color: #1C201E;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.cardOwner {
+    color: #1C201E;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.cardBody {
+    margin: 0 16px 18px 16px;
+}
