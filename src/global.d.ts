@@ -38,5 +38,6 @@ interface Window {
             }
         ) => void,
         createElement: (type: string, configuration: any, tag: string) => Promise<void>,
+        resetData: ([createElement]) => void
     }
 }

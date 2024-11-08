@@ -51,7 +51,7 @@ const CustomForm: React.FC<CustomProps> = ({
             base: {
                 color: '#666666',
                 fontWeight: 700,
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Roboto', sans-serif",
                 fontSize: '16px',
                 fontSmoothing: 'antialiased',
                 placeholder: {
@@ -162,7 +162,7 @@ const CustomForm: React.FC<CustomProps> = ({
             purchasenumber: purchasenumber,
             amount: "1.00",
             language: "es",
-            font: "https://fonts.googleapis.com/css?family=Montserrat:300&display=swap"
+            font: "https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap"
         });
 
         initSetting()
