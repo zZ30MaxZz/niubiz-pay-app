@@ -34,9 +34,9 @@ interface Window {
                 amount: "1.00",
                 callbackurl?: string,
                 language: "es",
-                font: "https://fonts.googleapis.com/css?family=Montserrat:400&display=swap"
+                font: string
             }
-        ) => Promise<any>,
+        ) => void,
         createElement: (type: string, configuration: any, tag: string) => Promise<void>,
     }
 }

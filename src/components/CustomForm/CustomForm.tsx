@@ -73,7 +73,7 @@ const CustomForm: React.FC<CustomProps> = ({
             'card-number',
             {
                 style: elementStyles,
-                placeholder: 'Número de tarjeta'
+                placeholder: '**** **** **** ****'
             },
             'txtNumeroTarjeta'
         );
@@ -83,13 +83,12 @@ const CustomForm: React.FC<CustomProps> = ({
                 // alert('Vinculado')
             });
             element.on('change', function (data: any) {
-                const cardnumberdata = JSON.stringify(data);
-                const cardnumbervalidation = JSON.parse(cardnumberdata);
-                if (data.length > 0 && cardnumbervalidation[0].code === "invalid_number") {
-                    alert('Invalido')
+                if (data.length > 0 && data[0].code === "invalid_number") {
+                    console.log(data[0].message)
+                    errors.cardNumber = data[0].message;
                 }
-
-                console.log(cardnumbervalidation[0].message);
+                else
+                    errors.cardNumber = '';
             });
             element.on('dcc', function (data: any) {
             });
@@ -112,6 +111,12 @@ const CustomForm: React.FC<CustomProps> = ({
 
         cardExpiry.then(element => {
             element.on('change', function (data: any) {
+                if (data.length > 0 && data[0].code === "invalid_expiry") {
+                    console.log(data[0].message);
+                    errors.cardExpirationDate = data[0].message;
+                }
+                else
+                    errors.cardExpirationDate = '';
             })
         });
 
@@ -120,12 +125,19 @@ const CustomForm: React.FC<CustomProps> = ({
                 'card-cvc',
                 {
                     style: elementStyles,
-                    placeholder: 'CVV'
+                    placeholder: '***'
                 },
                 'txtCvv'
             );
         cardCvv.then(element => {
-            element.on('change', function (event: any) {
+            element.on('change', function (data: any) {
+                if (data.length > 0 && data[0].code === "invalid_cvc") {
+                    console.log(data[0].message);
+
+                    errors.cardCvv = data[0].message;
+                }
+                else
+                    errors.cardCvv = '';
             })
         });
     };
@@ -141,7 +153,7 @@ const CustomForm: React.FC<CustomProps> = ({
             purchasenumber: purchasenumber,
             amount: "1.00",
             language: "es",
-            font: "https://fonts.googleapis.com/css?family=Montserrat:400&display=swap"
+            font: "https://fonts.googleapis.com/css?family=Montserrat:300&display=swap"
         });
 
         initSetting()
@@ -216,42 +228,19 @@ const CustomForm: React.FC<CustomProps> = ({
                                 />
                             </div>
                             <div className={styles.formInfoCard}>
-                                <div id="txtNumeroTarjeta" className={`form-control ${styles.formControl}`}></div>
-                                <div id="txtFechaVencimiento" className="form-control"></div>
-                                <div id="txtCvv" className="form-control"></div>
-                                <InputGroup
-                                    id='cardNumbers'
-                                    label='Número de tarjeta'
-                                    type='document'
-                                    name='cardNumber'
-                                    value={values.cardNumber}
-                                    error={errors.cardNumber}
-                                    callbackOnChange={handleInputChange}
-                                    maxLength={50} />
-
+                                <div className={styles.inputContainer}>
+                                    <div className={styles.inputLabel}>Número de tarjeta</div>
+                                    <div id="txtNumeroTarjeta" className={`form-control ${styles.formControl}`}></div>
+                                </div>
                                 <div className={styles.formRow}>
-                                    <InputGroup
-                                        id='cardExpirationDate'
-                                        label='Vencimiento'
-                                        type='text'
-                                        name='cardExpirationDate'
-                                        value={values.cardExpirationDate}
-                                        error={errors.cardExpirationDate}
-                                        callbackOnChange={handleInputChange}
-                                        maxLength={50} />
-                                    <InputGroup
-                                        id='cardCvv'
-                                        label='Código CVV'
-                                        type='text'
-                                        name='cardCvv'
-                                        value={values.cardCvv}
-                                        error={errors.cardCvv}
-                                        callbackOnChange={handleInputChange}
-                                        maxLength={50}
-                                        onFocus={() => setIsFlipped(true)}
-                                        onBlur={() => setIsFlipped(false)}
-                                    />
-
+                                    <div className={styles.inputContainer}>
+                                        <div className={styles.inputLabel}>Vencimiento</div>
+                                        <div id="txtFechaVencimiento" className={`form-control ${styles.formControl}`}></div>
+                                    </div>
+                                    <div className={styles.inputContainer}>
+                                        <div className={styles.inputLabel}>Código CVV</div>
+                                        <div id="txtCvv" className={`form-control ${styles.formControl}`}></div>
+                                    </div>
                                 </div>
                                 <div className={styles.formRow}>
                                     <InputGroup
