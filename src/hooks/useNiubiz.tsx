@@ -1,23 +1,32 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import {
+  MerchantDefineData,
+  SessionRequest,
+  TokenSessionReturn,
   UseNiubizReturn,
 } from "../components/types";
 import CustomForm from "../components/CustomForm/CustomForm";
-import useNiubizToken from "./useNiubizToken";
-import { fetcher } from "../helper/fetcher";
-import GetNiubizToken from "./useNiubizToken";
+import GetNiubizToken from "../helper/GetNiubizToken";
+import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
+
 
 const useNiubiz = (
   credentialEncoded: string,
+  merchandId: string,
   baseUrl: string,
   tokenService: string,
   sessionService: string,
   srcCustomScript: string,
   srcCustomCss: string,
-  MDD?: {}
+  MDD: MerchantDefineData
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
+
+  const [tokenSecurity, setTokenSecurity] = useState<string | null>();
+  const [tokenSession, setTokenSession] = useState<TokenSessionReturn | null>();
+
+  const memoizedMDD = useMemo(() => MDD, [MDD]);
 
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -42,7 +51,7 @@ const useNiubiz = (
     };
 
     loadResources();
-  }, [srcCustomScript, srcCustomCss]);
+  }, [srcCustomScript]);
 
   const triggerOpenForm = useCallback(() => {
     if (!scriptsLoaded) {
@@ -54,13 +63,40 @@ const useNiubiz = (
 
       const response = await GetNiubizToken(url, credentialEncoded);
 
-      setShowForm(true);
-      console.log(response.tokenSecurity);
-    }
+      setTokenSecurity(response.tokenSecurity);
+    };
 
     handleGetTokenSecurity();
-
   }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
+
+  useEffect(() => {
+    if (tokenSecurity) {
+      const handleGetTokenSession = async () => {
+        const url = `${baseUrl}${sessionService}/${merchandId}`;
+
+        let requestParams: SessionRequest = {
+          amount: 1,
+          antifraud: {
+            merchantDefineData: memoizedMDD,
+          },
+          channel: "web",
+        };
+
+        const response = await GetNiubizTokenSession(url, tokenSecurity, requestParams);
+
+        setTokenSession(response);
+      };
+
+      handleGetTokenSession();
+    }
+  }, [tokenSecurity, baseUrl, sessionService, merchandId, memoizedMDD]);
+
+  useEffect(() => {
+    if (tokenSession) {
+      console.log(tokenSecurity, tokenSession);
+      setShowForm(true);
+    }
+  }, [tokenSession, tokenSecurity]);
 
   const handleOnClose = () => {
     setShowForm(false);
