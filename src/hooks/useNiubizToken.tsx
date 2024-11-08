@@ -1,26 +1,24 @@
-import { useCallback } from "react";
 import { UseTokenReturn } from "../components/types";
 import { fetcher } from "../helper/fetcher";
 
-const useNiubizToken = (
+const GetNiubizToken = async (
     url: string,
-    credentialEncoded: string,
-): UseTokenReturn => {
+    credentialEncoded: string
+): Promise<UseTokenReturn> => {
+    let tokenSecurity = '';
+    const authorization = "Basic " + credentialEncoded;
+    const options = { method: "POST" };
 
-    const triggerToken = useCallback(async () => {
-        const authorization = "Basic " + credentialEncoded;
-        const options = { method: "GET" };
+    try {
+        const response = await fetcher(url, options, null, authorization);
 
-        try {
-            const response = await fetcher(url, options, null, authorization);
-            
-            return typeof response === "string" ? response : '';
-        } catch (error) {
-            return '';
-        }
-    }, [credentialEncoded, url]);
+        tokenSecurity = typeof response === "string" ? response : '';
+    } catch (error) {
+        console.error("Error fetching Niubiz token:", error);
+        return { tokenSecurity };
+    }
 
-    return { triggerToken };
+    return { tokenSecurity };
 };
 
-export default useNiubizToken;
+export default GetNiubizToken;

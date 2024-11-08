@@ -28,7 +28,7 @@ export interface UseNotificationReturn {
 
 
 export interface UseTokenReturn {
-  triggerToken: () => Promise<string>;
+  tokenSecurity: string;
 }
 
 

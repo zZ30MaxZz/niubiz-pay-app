@@ -3,20 +3,22 @@ import {
   UseNiubizReturn,
 } from "../components/types";
 import CustomForm from "../components/CustomForm/CustomForm";
+import useNiubizToken from "./useNiubizToken";
+import { fetcher } from "../helper/fetcher";
+import GetNiubizToken from "./useNiubizToken";
 
 const useNiubiz = (
   credentialEncoded: string,
   baseUrl: string,
   tokenService: string,
   sessionService: string,
-  srcScript: string,
-  srcCss: string,
+  srcCustomScript: string,
+  srcCustomCss: string,
   MDD?: {}
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
 
-  // Función para cargar un script
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
       const script = document.createElement("script");
@@ -27,36 +29,52 @@ const useNiubiz = (
     });
   };
 
-
   useEffect(() => {
-    // Cargar el CSS y el script
     const loadResources = async () => {
       try {
-        await Promise.all([loadScript(srcScript)]);
-        setScriptsLoaded(true); // Marcar los scripts como cargados
+        await Promise.all([loadScript(srcCustomScript)]);
+        setScriptsLoaded(true);
+
+        loadCustomTag();
       } catch (error) {
         console.error(error);
       }
     };
 
     loadResources();
-  }, [srcScript, srcCss]);
+  }, [srcCustomScript, srcCustomCss]);
 
   const triggerOpenForm = useCallback(() => {
     if (!scriptsLoaded) {
       return;
     }
 
-    setShowForm((prev) => !prev);
-  }, [scriptsLoaded]);
+    const handleGetTokenSecurity = async () => {
+      const url = `${baseUrl}${tokenService}`;
+
+      const response = await GetNiubizToken(url, credentialEncoded);
+
+      setShowForm(true);
+      console.log(response.tokenSecurity);
+    }
+
+    handleGetTokenSecurity();
+
+  }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
 
   const handleOnClose = () => {
     setShowForm(false);
   };
 
-  const FormComponent = (
-    <CustomForm showForm={showForm} srcCss={srcCss} onClose={handleOnClose} />
+  const FormComponent = scriptsLoaded ? (
+    <CustomForm showForm={showForm} srcCss={srcCustomCss} onClose={handleOnClose} />
+  ) : (
+    <div>Cargando...</div>
   );
+
+  const loadCustomTag = async () => {
+    console.log('Librerias listas para usar');
+  };
 
   return { FormComponent, triggerOpenForm };
 };
