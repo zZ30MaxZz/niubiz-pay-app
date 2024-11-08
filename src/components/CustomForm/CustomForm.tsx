@@ -7,11 +7,20 @@ import InputGroup from '../InputGroup/InputGroup';
 type CustomProps = {
     showForm: boolean;
     srcCss: string;
+    tokenSession?: string;
+    merchandId: string,
+    purchasenumber: number,
     onClose: () => void;
-
 };
 
-const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
+const CustomForm: React.FC<CustomProps> = ({
+    showForm,
+    srcCss,
+    tokenSession,
+    merchandId,
+    purchasenumber,
+    onClose
+}) => {
     const [isFlipped, setIsFlipped] = useState(false)
 
     const [values, setValues] = React.useState({
@@ -35,8 +44,8 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
 
     const loadInputs = () => {
         let cardNumber: Promise<any>;
-        let cardCvv: Promise<any>;
         let cardExpiry: Promise<any>;
+        let cardCvv: Promise<any>;
 
         const elementStyles = {
             base: {
@@ -64,39 +73,88 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
             'card-number',
             {
                 style: elementStyles,
-                placeholder: 'Número de Tarjeta'
+                placeholder: 'Número de tarjeta'
             },
             'txtNumeroTarjeta'
         );
 
-        // cardNumber.then(element => {
-        //     element.on('change', function (data: any) {
-        //         // $('.error-container-cardnumber').hide();
-        //         // const cardnumberdata = JSON.stringify(data);
-        //         // const cardnumbervalidation = JSON.parse(cardnumberdata);
-        //         // if (data.length > 0 && cardnumbervalidation[0].code == "invalid_number") {
+        cardNumber.then(element => {
+            element.on('bin', function (data: any) {
+                // alert('Vinculado')
+            });
+            element.on('change', function (data: any) {
+                const cardnumberdata = JSON.stringify(data);
+                const cardnumbervalidation = JSON.parse(cardnumberdata);
+                if (data.length > 0 && cardnumbervalidation[0].code === "invalid_number") {
+                    alert('Invalido')
+                }
 
-        //         //     $('.error-container-cardnumber').show();
-        //         //     $('.error-cardnumber').html(cardnumbervalidation[0].message);
-        //         // }
+                console.log(cardnumbervalidation[0].message);
+            });
+            element.on('dcc', function (data: any) {
+            });
+            element.on('installments', function (data: any) {
+            });
+            element.on('lastFourDigits', function (data: any) {
+                console.log(data);
+            });
+        });
 
-        //         console.log(data);
-        //     });
-        //     // element.on('dcc', function (data) {
-        //     // });
-        //     // element.on('installments', function (data) {
-        //     // });
-        //     // element.on('lastFourDigits', function (data) {
-        //     //     $('.last-four-digits').html('');
-        //     //     $('.last-four-digits').html('**** **** **** ' + data);
-        //     //     lastfourdigitscardnumber = data;
-        //     // });
-        // });
+        cardExpiry =
+            window?.payform.createElement(
+                'card-expiry',
+                {
+                    style: elementStyles,
+                    placeholder: 'MM/AA'
+                },
+                'txtFechaVencimiento'
+            );
+
+        cardExpiry.then(element => {
+            element.on('change', function (data: any) {
+            })
+        });
+
+        cardCvv =
+            window?.payform.createElement(
+                'card-cvc',
+                {
+                    style: elementStyles,
+                    placeholder: 'CVV'
+                },
+                'txtCvv'
+            );
+        cardCvv.then(element => {
+            element.on('change', function (event: any) {
+            })
+        });
     };
 
     useEffect(() => {
+        if (!tokenSession)
+            return;
+
+        const initSetting = () => window?.payform.setConfiguration({
+            sessionkey: tokenSession,
+            channel: 'paycard',
+            merchantid: merchandId,
+            purchasenumber: purchasenumber,
+            amount: "1.00",
+            language: "es",
+            font: "https://fonts.googleapis.com/css?family=Montserrat:400&display=swap"
+        });
+
+        initSetting()
+
+    }, [tokenSession, merchandId, purchasenumber]);
+
+    useEffect(() => {
         const initializePayform = () => {
-            if (document.getElementById('txtNumeroTarjeta')) {
+            if (
+                document.getElementById('txtNumeroTarjeta') &&
+                document.getElementById('txtFechaVencimiento') &&
+                document.getElementById('txtCvv')
+            ) {
                 loadInputs();
             }
         };
@@ -109,7 +167,6 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
         }, 100);
 
         return () => clearInterval(intervalId);
-
     }, []);
 
     if (!showForm) {
@@ -160,6 +217,8 @@ const CustomForm: React.FC<CustomProps> = ({ showForm, srcCss, onClose }) => {
                             </div>
                             <div className={styles.formInfoCard}>
                                 <div id="txtNumeroTarjeta" className={`form-control ${styles.formControl}`}></div>
+                                <div id="txtFechaVencimiento" className="form-control"></div>
+                                <div id="txtCvv" className="form-control"></div>
                                 <InputGroup
                                     id='cardNumbers'
                                     label='Número de tarjeta'

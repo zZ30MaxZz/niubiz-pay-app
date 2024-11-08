@@ -30,13 +30,13 @@ interface Window {
                 sessionkey: string,
                 channel: 'paycard',
                 merchantid: string,
-                purchasenumber: string,
+                purchasenumber: number,
                 amount: "1.00",
-                callbackurl: string,
+                callbackurl?: string,
                 language: "es",
                 font: "https://fonts.googleapis.com/css?family=Montserrat:400&display=swap"
             }
-        ) => void,
+        ) => Promise<any>,
         createElement: (type: string, configuration: any, tag: string) => Promise<void>,
     }
 }

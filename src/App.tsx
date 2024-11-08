@@ -11,11 +11,12 @@ function App() {
     MDD75: 'Registrado',
     MDD77: '0',
   }), []);
-  
+
   const { NotificationComponent, triggerNotification } = useNotification("bottom-left");
   const { FormComponent, triggerOpenForm } = useNiubiz(
     "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
     "456879852",
+    Math.floor(Math.random() * 120000) + 1,
     "https://apitestenv.vnforapps.com",
     "/api.security/v1/security",
     "/api.ecommerce/v2/ecommerce/token/session",

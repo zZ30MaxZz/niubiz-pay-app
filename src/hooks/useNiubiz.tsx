@@ -13,6 +13,7 @@ import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
 const useNiubiz = (
   credentialEncoded: string,
   merchandId: string,
+  purchasenumber: number,
   baseUrl: string,
   tokenService: string,
   sessionService: string,
@@ -93,7 +94,6 @@ const useNiubiz = (
 
   useEffect(() => {
     if (tokenSession) {
-      console.log(tokenSecurity, tokenSession);
       setShowForm(true);
     }
   }, [tokenSession, tokenSecurity]);
@@ -103,7 +103,14 @@ const useNiubiz = (
   };
 
   const FormComponent = scriptsLoaded ? (
-    <CustomForm showForm={showForm} srcCss={srcCustomCss} onClose={handleOnClose} />
+    <CustomForm
+      showForm={showForm}
+      srcCss={srcCustomCss}
+      tokenSession={tokenSession?.sessionKey}
+      merchandId={merchandId}
+      purchasenumber={purchasenumber}
+      onClose={handleOnClose}
+    />
   ) : (
     <div>Cargando...</div>
   );
