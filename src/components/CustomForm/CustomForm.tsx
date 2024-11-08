@@ -95,7 +95,10 @@ const CustomForm: React.FC<CustomProps> = ({
             element.on('installments', function (data: any) {
             });
             element.on('lastFourDigits', function (data: any) {
-                console.log(data);
+                setValues((prev) => ({
+                    ...prev,
+                    cardNumber: `**** **** **** ${data}`
+                }));
             });
         });
 
@@ -115,8 +118,11 @@ const CustomForm: React.FC<CustomProps> = ({
                     console.log(data[0].message);
                     errors.cardExpirationDate = data[0].message;
                 }
-                else
+                else{
                     errors.cardExpirationDate = '';
+
+                    console.log(data);
+                }
             })
         });
 
@@ -135,10 +141,13 @@ const CustomForm: React.FC<CustomProps> = ({
                     console.log(data[0].message);
 
                     errors.cardCvv = data[0].message;
+                    setIsFlipped(true)
                 }
-                else
+                else {
+                    setIsFlipped(false)
                     errors.cardCvv = '';
-            })
+                }
+            });
         });
     };
 
@@ -162,17 +171,22 @@ const CustomForm: React.FC<CustomProps> = ({
 
     useEffect(() => {
         const initializePayform = () => {
-            if (
-                document.getElementById('txtNumeroTarjeta') &&
-                document.getElementById('txtFechaVencimiento') &&
-                document.getElementById('txtCvv')
-            ) {
+            const numeroTarjeta = document.getElementById('txtNumeroTarjeta');
+            const fechaVencimiento = document.getElementById('txtFechaVencimiento');
+            const cvv = document.getElementById('txtCvv');
+
+            if (numeroTarjeta && fechaVencimiento && cvv) {
                 loadInputs();
             }
         };
 
         const intervalId = setInterval(() => {
-            if (document.getElementById('txtNumeroTarjeta')) {
+            if (
+                document.getElementById('txtNumeroTarjeta') &&
+                document.getElementById('txtFechaVencimiento') &&
+                document.getElementById('txtCvv')
+
+            ) {
                 clearInterval(intervalId);
                 initializePayform();
             }
