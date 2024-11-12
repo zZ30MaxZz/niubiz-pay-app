@@ -104,6 +104,8 @@ const useNiubiz = (
 
   const handleOnClose = () => {
     setShowForm(false);
+
+    window.location.reload();
   };
 
   const FormComponent = scriptsLoaded ? (

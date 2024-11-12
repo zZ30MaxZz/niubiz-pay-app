@@ -251,10 +251,6 @@ const CustomForm: React.FC<CustomProps> = ({
         return null;
     }
 
-    const handleOnClose = () => {
-        onClose();
-    };
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
 
@@ -305,7 +301,7 @@ const CustomForm: React.FC<CustomProps> = ({
                 <div className={styles.formSection}>
                     <div className={styles.formHeader}>
                         <div className={styles.formTitle}>Agregar nueva tarjeta</div>
-                        <div className={styles.formIconClose} onClick={handleOnClose}>
+                        <div className={styles.formIconClose} onClick={onClose}>
                             <X size={24} />
                         </div>
                     </div>
@@ -373,7 +369,7 @@ const CustomForm: React.FC<CustomProps> = ({
                     </div>
                     <div className={styles.formFooter}>
                         <div className={styles.formButtonContainer}>
-                            <button className={styles.buttonSecondary}>Volver</button>
+                            <button className={styles.buttonSecondary} onClick={onClose}>Volver</button>
                             <button className={styles.buttonPrimary} onClick={handleTransactionToken}>Agregar</button>
                         </div>
                     </div>

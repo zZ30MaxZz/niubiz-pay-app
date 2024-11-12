@@ -15,10 +15,10 @@ function App() {
   const { NotificationComponent, triggerNotification } = useNotification("bottom-left");
   const { FormComponent, triggerOpenForm } = useNiubiz(
     "userniubiz@mail.com",
-    // "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
-    "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
-    // "400000042",
-    "341198210",
+    "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
+    // "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
+    "400000042",
+    // "341198210",
     Math.floor(Math.random() * 120000) + 1,
     "https://apitestenv.vnforapps.com",
     "/api.security/v1/security",
@@ -36,12 +36,7 @@ function App() {
       <header className="App-header">
         {NotificationComponent}
         {FormComponent}
-        <button onClick={() => triggerNotification({
-          type: "success",
-          message: "This is a success message!",
-          duration: 3000,
-          onClose: () => console.log("Success message closed")
-        })}>Open Toast</button>
+    
 
         <button onClick={triggerOpenForm}>Open Form</button>
       </header>
