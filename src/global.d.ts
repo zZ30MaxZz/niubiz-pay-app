@@ -28,16 +28,27 @@ interface Window {
         setConfiguration: (
             configuration: {
                 sessionkey: string,
-                channel: 'paycard',
+                channel: string,
                 merchantid: string,
                 purchasenumber: number,
-                amount: "1.00",
-                callbackurl?: string,
+                amount: string,
+                callbackurl: string,
                 language: "es",
                 font: string
             }
         ) => void,
-        createElement: (type: string, configuration: any, tag: string) => Promise<void>,
-        resetData: ([createElement]) => void
+        createElement: (type: string, configuration: any, tag: string) => Promise<any>,
+        resetData: ([createElement]) => void;
+        createToken: (params: any, data:
+            {
+                name: string,
+                lastName: string,
+                email: string,
+                alias: string,
+                userBlockId: string,
+                currencyConversion: boolean,
+                amount: string
+
+            }) => Promise<any>
     }
 }

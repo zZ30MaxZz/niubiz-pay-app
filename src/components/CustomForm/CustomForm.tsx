@@ -10,6 +10,8 @@ type CustomProps = {
     tokenSession?: string;
     merchandId: string,
     purchasenumber: number,
+    userEmail: string,
+    channelToken: string,
     onClose: () => void;
 };
 
@@ -19,9 +21,20 @@ const CustomForm: React.FC<CustomProps> = ({
     tokenSession,
     merchandId,
     purchasenumber,
+    userEmail,
+    channelToken,
     onClose
 }) => {
-    const [isFlipped, setIsFlipped] = useState(false)
+    const amount = '1.00';
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    const [cardNumberState, setCardNumberState] = useState<Promise<any>>();
+    const [cardExpiryState, setCardExpiryState] = useState<Promise<any>>();
+    const [cardCvvState, setCardCvvState] = useState<Promise<any>>();
+
+    let cardNumber: Promise<any>;
+    let cardExpiry: Promise<any>;
+    let cardCvv: Promise<any>;
 
     const [values, setValues] = React.useState({
         cardNumber: '',
@@ -42,11 +55,7 @@ const CustomForm: React.FC<CustomProps> = ({
         tyc: ''
     });
 
-    const loadInputs = () => {
-        let cardNumber: Promise<any>;
-        let cardExpiry: Promise<any>;
-        let cardCvv: Promise<any>;
-
+    const loadInputs = async () => {
         const elementStyles = {
             base: {
                 color: '#666666',
@@ -78,23 +87,53 @@ const CustomForm: React.FC<CustomProps> = ({
             'txtNumeroTarjeta'
         );
 
+        cardExpiry = window?.payform.createElement(
+            'card-expiry',
+            {
+                style: elementStyles,
+                placeholder: 'MM/AA'
+            },
+            'txtFechaVencimiento'
+        );
+
+        cardCvv = window?.payform.createElement(
+            'card-cvc',
+            {
+                style: elementStyles,
+                placeholder: '***'
+            },
+            'txtCvv'
+        );
+
         cardNumber.then(element => {
             element.on('bin', function (data: any) {
-                // alert('Vinculado')
             });
             element.on('change', function (data: any) {
                 if (data.length > 0 && data[0].code === "invalid_number") {
-                    console.log(data[0].message)
-                    errors.cardNumber = data[0].message;
+
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardNumber: data[0].message
+                    }));
+
+                    setValues((prev) => ({
+                        ...prev,
+                        cardNumber: ''
+                    }));
                 }
-                else
-                    errors.cardNumber = '';
+                else {
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardNumber: ''
+                    }));
+                }
             });
             element.on('dcc', function (data: any) {
             });
             element.on('installments', function (data: any) {
             });
             element.on('lastFourDigits', function (data: any) {
+                setCardNumberState(cardNumber);
                 setValues((prev) => ({
                     ...prev,
                     cardNumber: `**** **** **** ${data}`
@@ -102,50 +141,44 @@ const CustomForm: React.FC<CustomProps> = ({
             });
         });
 
-        cardExpiry =
-            window?.payform.createElement(
-                'card-expiry',
-                {
-                    style: elementStyles,
-                    placeholder: 'MM/AA'
-                },
-                'txtFechaVencimiento'
-            );
-
         cardExpiry.then(element => {
             element.on('change', function (data: any) {
                 if (data.length > 0 && data[0].code === "invalid_expiry") {
-                    console.log(data[0].message);
-                    errors.cardExpirationDate = data[0].message;
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardExpirationDate: data[0].message
+                    }));
                 }
-                else{
-                    errors.cardExpirationDate = '';
+                else {
+                    setCardExpiryState(cardExpiry);
 
-                    console.log(data);
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardExpirationDate: ''
+                    }));
                 }
             })
         });
 
-        cardCvv =
-            window?.payform.createElement(
-                'card-cvc',
-                {
-                    style: elementStyles,
-                    placeholder: '***'
-                },
-                'txtCvv'
-            );
         cardCvv.then(element => {
             element.on('change', function (data: any) {
                 if (data.length > 0 && data[0].code === "invalid_cvc") {
-                    console.log(data[0].message);
+                    setIsFlipped(true);
 
-                    errors.cardCvv = data[0].message;
-                    setIsFlipped(true)
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardCvv: data[0].message
+                    }));
                 }
                 else {
-                    setIsFlipped(false)
-                    errors.cardCvv = '';
+                    setCardCvvState(cardCvv);
+
+                    setIsFlipped(false);
+
+                    setErrors((prev) => ({
+                        ...prev,
+                        cardCvv: ''
+                    }));
                 }
             });
         });
@@ -157,10 +190,11 @@ const CustomForm: React.FC<CustomProps> = ({
 
         const initSetting = () => window?.payform.setConfiguration({
             sessionkey: tokenSession,
-            channel: 'paycard',
+            channel: channelToken,
             merchantid: merchandId,
             purchasenumber: purchasenumber,
-            amount: "1.00",
+            amount: amount,
+            callbackurl: "",
             language: "es",
             font: "https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap"
         });
@@ -170,16 +204,6 @@ const CustomForm: React.FC<CustomProps> = ({
     }, [tokenSession, merchandId, purchasenumber]);
 
     useEffect(() => {
-        const initializePayform = () => {
-            const numeroTarjeta = document.getElementById('txtNumeroTarjeta');
-            const fechaVencimiento = document.getElementById('txtFechaVencimiento');
-            const cvv = document.getElementById('txtCvv');
-
-            if (numeroTarjeta && fechaVencimiento && cvv) {
-                loadInputs();
-            }
-        };
-
         const intervalId = setInterval(() => {
             if (
                 document.getElementById('txtNumeroTarjeta') &&
@@ -188,7 +212,7 @@ const CustomForm: React.FC<CustomProps> = ({
 
             ) {
                 clearInterval(intervalId);
-                initializePayform();
+                loadInputs();
             }
         }, 100);
 
@@ -206,8 +230,6 @@ const CustomForm: React.FC<CustomProps> = ({
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
 
-        console.log(value);
-
         setValues((prev) => ({
             ...prev,
             [event.target.name]: value
@@ -217,6 +239,31 @@ const CustomForm: React.FC<CustomProps> = ({
             ...prev,
             [event.target.name]: ''
         }))
+    };
+
+    const handleTransactionToken = () => {
+        var data = {
+            name: values.cardFirstname,
+            lastName: values.cardLastname,
+            email: userEmail,
+            alias: userEmail,
+            userBlockId: userEmail,
+            currencyConversion: false,
+            amount: amount
+        };
+
+        const inputCard = [cardNumberState, cardExpiryState, cardCvvState];
+
+        window?.payform.createToken(
+            inputCard,
+            data
+        )
+            .then(function (data) {
+                console.log(data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
     };
 
     return (
@@ -295,7 +342,7 @@ const CustomForm: React.FC<CustomProps> = ({
                     <div className={styles.formFooter}>
                         <div className={styles.formButtonContainer}>
                             <button className={styles.buttonSecondary}>Volver</button>
-                            <button className={styles.buttonPrimary}>Agregar</button>
+                            <button className={styles.buttonPrimary} onClick={handleTransactionToken}>Agregar</button>
                         </div>
                     </div>
                 </div>

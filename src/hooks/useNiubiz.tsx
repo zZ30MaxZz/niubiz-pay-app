@@ -11,6 +11,7 @@ import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
 
 
 const useNiubiz = (
+  userEmail: string,
   credentialEncoded: string,
   merchandId: string,
   purchasenumber: number,
@@ -19,7 +20,9 @@ const useNiubiz = (
   sessionService: string,
   srcCustomScript: string,
   srcCustomCss: string,
-  MDD: MerchantDefineData
+  MDD: MerchantDefineData,
+  channelSession: string,
+  channelToken: string
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
@@ -80,7 +83,7 @@ const useNiubiz = (
           antifraud: {
             merchantDefineData: memoizedMDD,
           },
-          channel: "web",
+          channel: channelSession,
         };
 
         const response = await GetNiubizTokenSession(url, tokenSecurity, requestParams);
@@ -110,6 +113,8 @@ const useNiubiz = (
       merchandId={merchandId}
       purchasenumber={purchasenumber}
       onClose={handleOnClose}
+      userEmail={userEmail}
+      channelToken={channelToken}
     />
   ) : (
     <div>Cargando...</div>
