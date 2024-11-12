@@ -58,3 +58,20 @@ export interface MerchantDefineData {
   MDD75: string //Registrado
   MDD77: string //Dias registrado
 }
+
+export interface TokenizerResponse {
+  bin: string
+  transactionToken: string
+  channel: string
+}
+
+//
+
+export interface ErrorResponse {
+  errorCode: number
+  errorMessage: string
+  data: Data
+}
+
+export interface Data { }
+

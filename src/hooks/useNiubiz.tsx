@@ -18,6 +18,7 @@ const useNiubiz = (
   baseUrl: string,
   tokenService: string,
   sessionService: string,
+  tokenizerService: string,
   srcCustomScript: string,
   srcCustomCss: string,
   MDD: MerchantDefineData,
@@ -93,7 +94,7 @@ const useNiubiz = (
 
       handleGetTokenSession();
     }
-  }, [tokenSecurity, baseUrl, sessionService, merchandId, memoizedMDD]);
+  }, [tokenSecurity, baseUrl, sessionService, merchandId, memoizedMDD, channelSession]);
 
   useEffect(() => {
     if (tokenSession) {
@@ -115,6 +116,9 @@ const useNiubiz = (
       onClose={handleOnClose}
       userEmail={userEmail}
       channelToken={channelToken}
+      tokenizerService={tokenizerService}
+      tokenSecurity={tokenSecurity}
+      baseUrl={baseUrl}
     />
   ) : (
     <div>Cargando...</div>

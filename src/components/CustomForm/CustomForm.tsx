@@ -3,6 +3,8 @@ import styles from "./customForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import Card from '../Card/Card';
 import InputGroup from '../InputGroup/InputGroup';
+import { ErrorResponse, TokenizerResponse } from '../types';
+import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
 
 type CustomProps = {
     showForm: boolean;
@@ -12,6 +14,9 @@ type CustomProps = {
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
+    tokenizerService: string,
+    tokenSecurity?: string | null,
+    baseUrl: string,
     onClose: () => void;
 };
 
@@ -23,6 +28,9 @@ const CustomForm: React.FC<CustomProps> = ({
     purchasenumber,
     userEmail,
     channelToken,
+    tokenizerService,
+    tokenSecurity,
+    baseUrl,
     onClose
 }) => {
     const amount = '1.00';
@@ -32,9 +40,13 @@ const CustomForm: React.FC<CustomProps> = ({
     const [cardExpiryState, setCardExpiryState] = useState<Promise<any>>();
     const [cardCvvState, setCardCvvState] = useState<Promise<any>>();
 
+    const [tokenizer, setTokenizer] = useState<TokenizerResponse | null>();
+    const [errorTokenizer, setErrorTokenizer] = useState<ErrorResponse | null>()
+
     let cardNumber: Promise<any>;
     let cardExpiry: Promise<any>;
     let cardCvv: Promise<any>;
+
 
     const [values, setValues] = React.useState({
         cardNumber: '',
@@ -201,7 +213,7 @@ const CustomForm: React.FC<CustomProps> = ({
 
         initSetting()
 
-    }, [tokenSession, merchandId, purchasenumber]);
+    }, [tokenSession, merchandId, purchasenumber, channelToken]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -218,6 +230,22 @@ const CustomForm: React.FC<CustomProps> = ({
 
         return () => clearInterval(intervalId);
     }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (tokenizer?.transactionToken && tokenSecurity) {
+                const url = `${baseUrl}${tokenizerService}/${merchandId}/${tokenizer.transactionToken}`;
+                const response = await GetNiubizTokenizerCard(url, tokenSecurity);
+
+                if (response) {
+                    console.log(response)
+                }
+            }
+        };
+
+        fetchData();
+
+    }, [tokenizer, merchandId, tokenSecurity, tokenizerService]);
 
     if (!showForm) {
         return null;
@@ -242,7 +270,7 @@ const CustomForm: React.FC<CustomProps> = ({
     };
 
     const handleTransactionToken = () => {
-        var data = {
+        var dataForm = {
             name: values.cardFirstname,
             lastName: values.cardLastname,
             email: userEmail,
@@ -256,13 +284,17 @@ const CustomForm: React.FC<CustomProps> = ({
 
         window?.payform.createToken(
             inputCard,
-            data
+            dataForm
         )
             .then(function (data) {
-                console.log(data)
+                console.log('DATA:', data);
+
+                setTokenizer(data as TokenizerResponse);
+
             })
             .catch(function (error) {
-                console.log(error)
+                console.dir(error)
+                setErrorTokenizer(error as ErrorResponse);
             });
     };
 

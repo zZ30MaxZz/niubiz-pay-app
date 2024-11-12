@@ -23,6 +23,7 @@ function App() {
     "https://apitestenv.vnforapps.com",
     "/api.security/v1/security",
     "/api.ecommerce/v2/ecommerce/token/session",
+    "/api.ecommerce/v2/ecommerce/token/card",
     "https://pocpaymentserve.s3.amazonaws.com/payform.min.js",
     "https://pocpaymentserve.s3.amazonaws.com/payform.min.css",
     MDD,
