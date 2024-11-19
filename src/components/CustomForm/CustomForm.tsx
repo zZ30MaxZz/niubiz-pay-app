@@ -5,6 +5,7 @@ import Card from '../Card/Card';
 import InputGroup from '../InputGroup/InputGroup';
 import { ErrorResponse, TokenizerResponse } from '../types';
 import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
+import { FinancialInstitution } from '../../helper/card';
 
 type CustomProps = {
     showForm: boolean;
@@ -36,9 +37,12 @@ const CustomForm: React.FC<CustomProps> = ({
     const amount = '1.00';
     const [isFlipped, setIsFlipped] = useState(false);
 
+    const [brand, setBrand] = useState(FinancialInstitution.NotFound);
+
     const [cardNumberState, setCardNumberState] = useState<Promise<any>>();
     const [cardExpiryState, setCardExpiryState] = useState<Promise<any>>();
     const [cardCvvState, setCardCvvState] = useState<Promise<any>>();
+
 
     const [tokenizer, setTokenizer] = useState<TokenizerResponse | null>();
     const [errorTokenizer, setErrorTokenizer] = useState<ErrorResponse | null>()
@@ -313,7 +317,7 @@ const CustomForm: React.FC<CustomProps> = ({
                                     number={values.cardNumber}
                                     cvv={values.cardCvv}
                                     owner={`${values.cardFirstname} ${values.cardLastname}`}
-                                    brand='Amex'
+                                    brand={brand}
                                 />
                             </div>
                             <div className={styles.formInfoCard}>

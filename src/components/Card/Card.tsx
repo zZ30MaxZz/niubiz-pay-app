@@ -1,6 +1,7 @@
 import React, { } from 'react';
 import styles from "./card.module.scss";
 import IconHolder from '../Icon/Holder';
+import { FinancialInstitution } from '../../helper/card';
 
 type CustomProps = {
     isFlipped: boolean;
@@ -9,7 +10,7 @@ type CustomProps = {
     dateMonth?: string;
     cvv?: string;
     owner?: string;
-    brand?: string;
+    brand: {};
     brandIcon?: string;
 };
 
@@ -29,20 +30,26 @@ const Card: React.FC<CustomProps> = ({
     cvv = cvv ? cvv : '****';
     owner = owner ? owner : 'Nombre del titular';
 
+    let currentBrand = Object.values(FinancialInstitution).find(obj => obj.name === brand) ?? FinancialInstitution.NotFound;
+
+    let IconBrand = currentBrand.icon;
+
     return (
         <div className={`${styles.card}`}>
             <div className={`${styles.cardSection} ${isFlipped ? styles.cardFlipped : ''}`}>
-                <div className={`${styles.cardBody} ${styles.cardBodyFront} ${brand && styles['color' + brand]}`}>
+                <div className={`${styles.cardBody} ${styles.cardBodyFront} ${styles[currentBrand.class]}`}>
                     <div className={styles.cardBodyResume}>
-                        {brand && <div className={styles.cardBrand}>{brand}</div>}
+                        {currentBrand.name && <div className={styles.cardBrand}>{currentBrand.name}</div>}
                         <div className={styles.cardNumber}>{number}</div>
                         <div className={styles.cardDate}>Vence el {dateMonth}/{dateYear}</div>
                         <div className={styles.cardOwner}>{owner}</div>
-                        {brandIcon && <div className={styles.cardBrandIconContainer}>{brandIcon}</div>}
+                        <div className={styles.cardBrandIconContainer}>
+                            <IconBrand />
+                        </div>
                     </div>
                 </div>
-                <div className={`${styles.cardBody} ${styles.cardBodyBack} ${brand && styles['color' + brand]}`}>
-                    <div className={`${styles.cardMagneticTape} ${brand && styles['colorMagnetic' + brand]}`}></div>
+                <div className={`${styles.cardBody} ${styles.cardBodyBack} ${styles[currentBrand.class]}`}>
+                    <div className={`${styles.cardMagneticTape} ${styles.colorMagnetic}`}></div>
                     <div className={styles.cardHolderContainer}>
                         <IconHolder />
                     </div>
