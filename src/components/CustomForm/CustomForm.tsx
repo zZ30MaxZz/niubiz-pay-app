@@ -190,13 +190,6 @@ const CustomForm: React.FC<CustomProps> = ({
 
                     // setBrand(FinancialInstitution.NotFound.name);   
                 }
-                else {
-                    setCardNumberState(cardNumber);
-
-                    formik.setFieldValue('cardNumber', '123');
-                    formik.setFieldError('cardNumber', '');
-                    setFieldTouched('cardNumber', true);
-                }
             });
             element.on('dcc', function (data: any) {
             });
@@ -204,6 +197,12 @@ const CustomForm: React.FC<CustomProps> = ({
             });
             element.on('lastFourDigits', function (data: any) {
                 setLastNumbers(data);
+
+                setCardNumberState(cardNumber);
+
+                formik.setFieldValue('cardNumber', '123');
+                formik.setFieldError('cardNumber', '');
+                setFieldTouched('cardNumber', true);
             });
         });
 
