@@ -6,6 +6,8 @@ import InputGroup from '../InputGroup/InputGroup';
 import { ErrorResponse, TokenizerResponse } from '../types';
 import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
 import { FinancialInstitution, getCardType } from '../../helper/card';
+import * as Yup from 'yup';
+import { useFormik } from "formik";
 
 type CustomProps = {
     showForm: boolean;
@@ -43,6 +45,8 @@ const CustomForm: React.FC<CustomProps> = ({
     const [cardExpiryState, setCardExpiryState] = useState<Promise<any>>();
     const [cardCvvState, setCardCvvState] = useState<Promise<any>>();
 
+    const [lastNumbers, setLastNumbers] = useState<string>('');
+
 
     const [tokenizer, setTokenizer] = useState<TokenizerResponse | null>();
     const [errorTokenizer, setErrorTokenizer] = useState<ErrorResponse | null>()
@@ -51,25 +55,76 @@ const CustomForm: React.FC<CustomProps> = ({
     let cardExpiry: Promise<any>;
     let cardCvv: Promise<any>;
 
+    const [successForm, setSuccessForm] = useState(false);
 
-    const [values, setValues] = React.useState({
-        cardNumber: '',
-        cardExpirationDate: '',
-        cardCvv: '',
-        cardFirstname: '',
-        cardLastname: '',
-        tyc: ''
+    const cardSchema = Yup.object().shape({
+        cardNumber: Yup
+            .string()
+            .required('Este campo es requerido')
+            .max(50, 'No debe exceder los 50 caracteres'),
+        cardExpiry: Yup
+            .string()
+            .required('Este campo es requerido')
+            .max(50, 'No debe exceder los 50 caracteres'),
+        cardCvv: Yup
+            .string()
+            .required('Este campo es requerido')
+            .max(50, 'No debe exceder los 50 caracteres'),
+        cardFirstname: Yup
+            .string()
+            .required('Ingresa el Nombre como figura en tu tarjeta.')
+            .max(50, 'No debe exceder los 50 caracteres'),
+        cardLastname: Yup
+            .string()
+            .required('Ingresa el Apellido como figura en tu tarjeta.')
+            .max(50, 'No debe exceder los 50 caracteres'),
+        tyc: Yup
+            .boolean()
+            .required('Este campo es requerido')
     });
 
-    const [errors, setErrors] = React.useState({
-        cardNumber: '',
-        cardExpirationDate: '',
-        cardOwner: '',
-        cardCvv: '',
-        cardFirstname: '',
-        cardLastname: '',
-        tyc: ''
+    const formik = useFormik({
+        initialValues: {
+            cardNumber: '',
+            cardExpiry: '',
+            cardCvv: '',
+            cardFirstname: '',
+            cardLastname: '',
+            tyc: ''
+        },
+        validationSchema: cardSchema,
+        validateOnChange: true,
+        validateOnBlur: false,
+        onSubmit: async (values) => {
+            console.log(values);
+            console.log('Formulario enviado');
+
+
+
+            // onClose();
+        }
     });
+
+    const { values, errors, handleChange, handleSubmit, touched, isValid, setFieldTouched, resetForm } = formik;
+
+    useEffect(() => {
+        const validateForm = async () => {
+            const allFieldsTouched =
+                touched.cardNumber &&
+                touched.cardExpiry &&
+                touched.cardCvv &&
+                touched.cardFirstname &&
+                touched.cardLastname &&
+                touched.tyc;
+
+            setSuccessForm(isValid && (allFieldsTouched ?? false));
+
+
+            console.log('allFieldsTouched', errors);
+        };
+
+        validateForm();
+    }, [values, isValid, touched]);
 
     const loadInputs = async () => {
         const elementStyles = {
@@ -131,24 +186,16 @@ const CustomForm: React.FC<CustomProps> = ({
             });
             element.on('change', function (data: any) {
                 if (data.length > 0 && data[0].code === "invalid_number") {
-
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardNumber: data[0].message
-                    }));
-
-                    setValues((prev) => ({
-                        ...prev,
-                        cardNumber: ''
-                    }));
+                    formik.setFieldError('cardNumber', data[0].message);
 
                     // setBrand(FinancialInstitution.NotFound.name);   
                 }
                 else {
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardNumber: ''
-                    }));
+                    setCardNumberState(cardNumber);
+
+                    formik.setFieldValue('cardNumber', '123');
+                    formik.setFieldError('cardNumber', '');
+                    setFieldTouched('cardNumber', true);
                 }
             });
             element.on('dcc', function (data: any) {
@@ -156,52 +203,43 @@ const CustomForm: React.FC<CustomProps> = ({
             element.on('installments', function (data: any) {
             });
             element.on('lastFourDigits', function (data: any) {
-                setCardNumberState(cardNumber);
-                setValues((prev) => ({
-                    ...prev,
-                    cardNumber: `**** **** **** ${data}`
-                }));
+                setLastNumbers(data);
             });
         });
 
         cardExpiry.then(element => {
             element.on('change', function (data: any) {
+
                 if (data.length > 0 && data[0].code === "invalid_expiry") {
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardExpirationDate: data[0].message
-                    }));
+                    formik.setFieldError('cardExpirationDate', data[0].message);
                 }
                 else {
                     setCardExpiryState(cardExpiry);
 
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardExpirationDate: ''
-                    }));
+                    formik.setFieldValue('cardExpiry', '123');
+                    formik.setFieldError('cardExpiry', '');
+                    setFieldTouched('cardExpiry', true);
                 }
             })
         });
 
         cardCvv.then(element => {
             element.on('change', function (data: any) {
+                setFieldTouched('cardCvv', true);
+
                 if (data.length > 0 && data[0].code === "invalid_cvc") {
                     setIsFlipped(true);
 
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardCvv: data[0].message
-                    }));
+                    formik.setFieldError('cardCvv', data[0].message);
                 }
                 else {
                     setCardCvvState(cardCvv);
 
                     setIsFlipped(false);
 
-                    setErrors((prev) => ({
-                        ...prev,
-                        cardCvv: ''
-                    }));
+                    formik.setFieldValue('cardCvv', '123');
+                    formik.setFieldError('cardCvv', '');
+                    setFieldTouched('cardCvv', true);
                 }
             });
         });
@@ -232,7 +270,6 @@ const CustomForm: React.FC<CustomProps> = ({
                 document.getElementById('txtNumeroTarjeta') &&
                 document.getElementById('txtFechaVencimiento') &&
                 document.getElementById('txtCvv')
-
             ) {
                 clearInterval(intervalId);
                 loadInputs();
@@ -262,18 +299,11 @@ const CustomForm: React.FC<CustomProps> = ({
         return null;
     }
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
 
-        setValues((prev) => ({
-            ...prev,
-            [event.target.name]: value
-        }))
-
-        setErrors((prev) => ({
-            ...prev,
-            [event.target.name]: ''
-        }))
+        setFieldTouched(name, true);
+        handleChange(e);
     };
 
     const handleTransactionToken = () => {
@@ -321,7 +351,7 @@ const CustomForm: React.FC<CustomProps> = ({
                             <div className={styles.formCardContainer}>
                                 <Card
                                     isFlipped={isFlipped}
-                                    number={values.cardNumber}
+                                    number={lastNumbers}
                                     cvv={values.cardCvv}
                                     owner={`${values.cardFirstname} ${values.cardLastname}`}
                                     brand={brand}
@@ -330,16 +360,37 @@ const CustomForm: React.FC<CustomProps> = ({
                             <div className={styles.formInfoCard}>
                                 <div className={styles.inputContainer}>
                                     <div className={styles.inputLabel}>Número de tarjeta</div>
-                                    <div id="txtNumeroTarjeta" className={`form-control ${styles.formControl}`}></div>
+                                    <div id="txtNumeroTarjeta" className={`form-control ${styles.formControl} ${errors.cardNumber && styles.formError}`}></div>
+                                    {
+                                        errors.cardNumber &&
+                                        <div className={styles.inputErrorContainer}>
+                                            <X size={20} color="#C82014" />
+                                            <div className={styles.inputError}>{errors.cardNumber}</div>
+                                        </div>
+                                    }
                                 </div>
                                 <div className={styles.formRow}>
                                     <div className={styles.inputContainer}>
                                         <div className={styles.inputLabel}>Vencimiento</div>
-                                        <div id="txtFechaVencimiento" className={`form-control ${styles.formControl}`}></div>
+                                        <div id="txtFechaVencimiento" className={`form-control ${styles.formControl} ${errors.cardExpiry && styles.formError}`}></div>
+                                        {
+                                            errors.cardExpiry &&
+                                            <div className={styles.inputErrorContainer}>
+                                                <X size={20} color="#C82014" />
+                                                <div className={styles.inputError}>{errors.cardExpiry}</div>
+                                            </div>
+                                        }
                                     </div>
                                     <div className={styles.inputContainer}>
                                         <div className={styles.inputLabel}>Código CVV</div>
-                                        <div id="txtCvv" className={`form-control ${styles.formControl}`}></div>
+                                        <div id="txtCvv" className={`form-control ${styles.formControl} ${errors.cardCvv && styles.formError}`}></div>
+                                        {
+                                            errors.cardCvv &&
+                                            <div className={styles.inputErrorContainer}>
+                                                <X size={20} color="#C82014" />
+                                                <div className={styles.inputError}>{errors.cardCvv}</div>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className={styles.formRow}>
@@ -349,7 +400,7 @@ const CustomForm: React.FC<CustomProps> = ({
                                         type='text'
                                         name='cardFirstname'
                                         value={values.cardFirstname}
-                                        error={errors.cardFirstname}
+                                        error={touched.cardFirstname ? errors.cardFirstname : ''}
                                         callbackOnChange={handleInputChange}
                                         maxLength={50} />
                                     <InputGroup
@@ -358,22 +409,34 @@ const CustomForm: React.FC<CustomProps> = ({
                                         type='text'
                                         name='cardLastname'
                                         value={values.cardLastname}
-                                        error={errors.cardLastname}
+                                        error={touched.cardLastname ? errors.cardLastname : ''}
                                         callbackOnChange={handleInputChange}
                                         maxLength={50} />
                                 </div>
-                                <div className={styles.formCheckboxContainer}>
-                                    <input
-                                        type="checkbox"
-                                        id='tyc'
-                                        name='tyc'
-                                        value={values.tyc}
-                                        className={styles.formCheckbox}
-                                    />
-                                    <label
-                                        htmlFor="tyc"
-                                        className={styles.formCheckboxLabel}
-                                    >He leido y acepto los terminos y condiciones </label>
+                                <div className={styles.formRow}>
+                                    <div className={styles.inputContainer}>
+                                        <div className={styles.formCheckboxContainer}>
+                                            <input
+                                                type="checkbox"
+                                                id='tyc'
+                                                name='tyc'
+                                                value={values.tyc}
+                                                className={styles.formCheckbox}
+                                                onChange={handleInputChange}
+                                            />
+                                            <label
+                                                htmlFor="tyc"
+                                                className={styles.formCheckboxLabel}
+                                            >He leido y acepto los terminos y condiciones </label>
+                                        </div>
+                                        {
+                                            errors.tyc &&
+                                            <div className={styles.inputErrorContainer}>
+                                                <X size={20} color="#C82014" />
+                                                <div className={styles.inputError}>{errors.tyc}</div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -381,7 +444,7 @@ const CustomForm: React.FC<CustomProps> = ({
                     <div className={styles.formFooter}>
                         <div className={styles.formButtonContainer}>
                             <button className={styles.buttonSecondary} onClick={onClose}>Volver</button>
-                            <button className={styles.buttonPrimary} onClick={handleTransactionToken}>Agregar</button>
+                            <button className={`${styles.buttonPrimary} ${!successForm && styles.buttonDisabled}`} onClick={handleTransactionToken}>Agregar</button>
                         </div>
                     </div>
                 </div>

@@ -215,6 +215,10 @@
     }
 }
 
+.formError {
+    border: 1px solid #C82014;
+}
+
 .inputLabel {
     font-size: 14px;
     font-style: normal;
@@ -222,4 +226,28 @@
     color: #64706C;
     font-weight: 600;
     text-align: left;
+}
+
+.inputErrorContainer {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0 8px;
+    width: 100%;
+}
+
+.inputError {
+    color: gray;
+    animation: errorIn .3s ease forwards;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+}
+
+.buttonDisabled {
+    background-color: #F5F7F6;
+    color: #ABB5B2;
+    user-select: none;
+    touch-action: none;
 }
