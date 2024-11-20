@@ -97,7 +97,7 @@
 .cardMagneticTape {
     width: 100%;
     height: 23px;
-    background-color: #0614b9;
+    background-color: #868686;
     top: 29px;
     position: absolute;
 }
@@ -120,26 +120,55 @@
 
 //Color
 
-.colorVisa {
+.faVisa {
     background-color: #2847d9;
+
+    .cardMagneticTape {
+        background-color: #0614b9;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
 }
 
-.colorMagneticVisa {
-    background-color: #0614b9;
-}
-
-.colorAmex {
-    background-color: #434343;
-}
-
-.colorMagneticAmex {
-    background-color: #101010;
-}
-
-.colorMastercard {
+.faMastercard {
     background-color: #D2D2D2;
+
+    .cardMagneticTape {
+        background-color: #adadad;
+    }
 }
 
-.colorMagneticMastercard {
-    background-color: #adadad;
+.faAmex {
+    background-color: #434343;
+
+    .cardMagneticTape {
+        background-color: #222222;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
+}
+
+.faDinersClub {
+    background-color: #0079BE;
+
+    .cardMagneticTape {
+        background-color: #00398e;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
 }

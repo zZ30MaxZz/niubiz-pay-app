@@ -39,13 +39,15 @@ const Card: React.FC<CustomProps> = ({
             <div className={`${styles.cardSection} ${isFlipped ? styles.cardFlipped : ''}`}>
                 <div className={`${styles.cardBody} ${styles.cardBodyFront} ${styles[currentBrand.class]}`}>
                     <div className={styles.cardBodyResume}>
-                        {currentBrand.name && <div className={styles.cardBrand}>{currentBrand.name}</div>}
+                        {currentBrand.name && currentBrand.name !== FinancialInstitution.NotFound.name && <div className={styles.cardBrand}>{currentBrand.name}</div>}
                         <div className={styles.cardNumber}>{number}</div>
                         <div className={styles.cardDate}>Vence el {dateMonth}/{dateYear}</div>
                         <div className={styles.cardOwner}>{owner}</div>
-                        <div className={styles.cardBrandIconContainer}>
-                            <IconBrand />
-                        </div>
+                        {currentBrand.name !== FinancialInstitution.NotFound.name &&
+                            <div className={styles.cardBrandIconContainer}>
+                                <IconBrand />
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className={`${styles.cardBody} ${styles.cardBodyBack} ${styles[currentBrand.class]}`}>

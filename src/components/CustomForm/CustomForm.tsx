@@ -5,7 +5,7 @@ import Card from '../Card/Card';
 import InputGroup from '../InputGroup/InputGroup';
 import { ErrorResponse, TokenizerResponse } from '../types';
 import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
-import { FinancialInstitution } from '../../helper/card';
+import { FinancialInstitution, getCardType } from '../../helper/card';
 
 type CustomProps = {
     showForm: boolean;
@@ -37,7 +37,7 @@ const CustomForm: React.FC<CustomProps> = ({
     const amount = '1.00';
     const [isFlipped, setIsFlipped] = useState(false);
 
-    const [brand, setBrand] = useState(FinancialInstitution.NotFound);
+    const [brand, setBrand] = useState(FinancialInstitution.NotFound.name);
 
     const [cardNumberState, setCardNumberState] = useState<Promise<any>>();
     const [cardExpiryState, setCardExpiryState] = useState<Promise<any>>();
@@ -123,6 +123,11 @@ const CustomForm: React.FC<CustomProps> = ({
 
         cardNumber.then(element => {
             element.on('bin', function (data: any) {
+                console.log(data);
+                let numberCard = getCardType(data);
+
+                if (numberCard)
+                    setBrand(numberCard);
             });
             element.on('change', function (data: any) {
                 if (data.length > 0 && data[0].code === "invalid_number") {
@@ -136,6 +141,8 @@ const CustomForm: React.FC<CustomProps> = ({
                         ...prev,
                         cardNumber: ''
                     }));
+
+                    // setBrand(FinancialInstitution.NotFound.name);   
                 }
                 else {
                     setErrors((prev) => ({

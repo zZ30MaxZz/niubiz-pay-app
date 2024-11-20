@@ -1,4 +1,5 @@
 import IconAmex from "../components/Icons/IconAmex";
+import IconDinners from "../components/Icons/IconDinners";
 import IconEmpty from "../components/Icons/IconEmpty";
 import IconMasterCard from "../components/Icons/IconMasterCard";
 import IconVisa from "../components/Icons/IconVisa";
@@ -19,15 +20,15 @@ export const FinancialInstitution = {
         icon: IconAmex,
         class: 'faAmex'
     },
+    DinersClub: {
+        name: 'Diners Club',
+        icon: IconDinners,
+        class: 'faDinersClub'
+    },
     Discover: {
         name: 'Discover',
         icon: IconEmpty,
         class: 'faDiscover'
-    },
-    DinersClub: {
-        name: 'Diners Club',
-        icon: IconEmpty,
-        class: 'faDinersClub'
     },
     JCB: {
         name: 'JCB',
