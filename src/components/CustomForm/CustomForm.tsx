@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from "./customForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import Card from '../Card/Card';
@@ -38,6 +38,7 @@ const CustomForm: React.FC<CustomProps> = ({
 }) => {
     const amount = '1.00';
     const [isFlipped, setIsFlipped] = useState(false);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     const [brand, setBrand] = useState(FinancialInstitution.NotFound.name);
 
@@ -334,11 +335,17 @@ const CustomForm: React.FC<CustomProps> = ({
             });
     };
 
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+            // onClose();
+        }
+    };
+
     return (
         <>
             {/* <link rel="stylesheet" href={srcCss}></link> */}
-            <div className={styles.formContainer}>
-                <div className={styles.formSection}>
+            <div className={styles.formContainer} onClick={handleOverlayClick}>
+                <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formHeader}>
                         <div className={styles.formTitle}>Agregar nueva tarjeta</div>
                         <div className={styles.formIconClose} onClick={onClose}>

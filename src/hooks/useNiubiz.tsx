@@ -8,6 +8,7 @@ import {
 import CustomForm from "../components/CustomForm/CustomForm";
 import GetNiubizToken from "../helper/GetNiubizToken";
 import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
+import Loader from "../components/Loader/Loader";
 
 
 const useNiubiz = (
@@ -26,6 +27,7 @@ const useNiubiz = (
   channelToken: string
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
 
   const [tokenSecurity, setTokenSecurity] = useState<string | null>();
@@ -43,7 +45,8 @@ const useNiubiz = (
     });
   };
 
-  useEffect(() => {
+  const triggerOpenForm = useCallback(() => {
+    setShowLoader(true);
     const loadResources = async () => {
       try {
         await Promise.all([loadScript(srcCustomScript)]);
@@ -58,7 +61,7 @@ const useNiubiz = (
     loadResources();
   }, [srcCustomScript]);
 
-  const triggerOpenForm = useCallback(() => {
+  useEffect(() => {
     if (!scriptsLoaded) {
       return;
     }
@@ -69,10 +72,30 @@ const useNiubiz = (
       const response = await GetNiubizToken(url, credentialEncoded);
 
       setTokenSecurity(response.tokenSecurity);
+      
     };
 
     handleGetTokenSecurity();
+
   }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
+
+  // const triggerOpenForm = useCallback(() => {
+  //   if (!scriptsLoaded) {
+  //     return;
+  //   }
+
+  //   const handleGetTokenSecurity = async () => {
+  //     const url = `${baseUrl}${tokenService}`;
+
+  //     const response = await GetNiubizToken(url, credentialEncoded);
+
+  //     setTokenSecurity(response.tokenSecurity);
+  //   };
+
+  //   handleGetTokenSecurity();
+  // }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
+
+
 
   useEffect(() => {
     if (tokenSecurity) {
@@ -90,6 +113,8 @@ const useNiubiz = (
         const response = await GetNiubizTokenSession(url, tokenSecurity, requestParams);
 
         setTokenSession(response);
+
+        setShowLoader(false);
       };
 
       handleGetTokenSession();
@@ -108,23 +133,22 @@ const useNiubiz = (
     window.location.reload();
   };
 
-  const FormComponent = scriptsLoaded ? (
-    <CustomForm
-      showForm={showForm}
-      srcCss={srcCustomCss}
-      tokenSession={tokenSession?.sessionKey}
-      merchandId={merchandId}
-      purchasenumber={purchasenumber}
-      onClose={handleOnClose}
-      userEmail={userEmail}
-      channelToken={channelToken}
-      tokenizerService={tokenizerService}
-      tokenSecurity={tokenSecurity}
-      baseUrl={baseUrl}
-    />
-  ) : (
-    <div>Cargando...</div>
-  );
+  const FormComponent =
+    showLoader ?
+      <Loader color="#fff" size={40} /> :
+      <CustomForm
+        showForm={showForm}
+        srcCss={srcCustomCss}
+        tokenSession={tokenSession?.sessionKey}
+        merchandId={merchandId}
+        purchasenumber={purchasenumber}
+        onClose={handleOnClose}
+        userEmail={userEmail}
+        channelToken={channelToken}
+        tokenizerService={tokenizerService}
+        tokenSecurity={tokenSecurity}
+        baseUrl={baseUrl}
+      />;
 
   const loadCustomTag = async () => {
     console.log('Librerias listas para usar');
