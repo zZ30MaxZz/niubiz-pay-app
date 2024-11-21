@@ -45,6 +45,14 @@ const useNiubiz = (
     });
   };
 
+  const unloadScript = useCallback(() => {
+    const scriptExists = document.querySelector(`script[src="${srcCustomScript}"]`);
+    if (scriptExists) {
+      // document.body.removeChild(scriptExists);
+    }
+    setScriptsLoaded(false);
+  }, [srcCustomScript]);
+
   const triggerOpenForm = useCallback(() => {
     setShowLoader(true);
     const loadResources = async () => {
@@ -79,24 +87,6 @@ const useNiubiz = (
 
   }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
 
-  // const triggerOpenForm = useCallback(() => {
-  //   if (!scriptsLoaded) {
-  //     return;
-  //   }
-
-  //   const handleGetTokenSecurity = async () => {
-  //     const url = `${baseUrl}${tokenService}`;
-
-  //     const response = await GetNiubizToken(url, credentialEncoded);
-
-  //     setTokenSecurity(response.tokenSecurity);
-  //   };
-
-  //   handleGetTokenSecurity();
-  // }, [scriptsLoaded, baseUrl, tokenService, credentialEncoded]);
-
-
-
   useEffect(() => {
     if (tokenSecurity) {
       const handleGetTokenSession = async () => {
@@ -129,8 +119,9 @@ const useNiubiz = (
 
   const handleOnClose = () => {
     setShowForm(false);
-
-    window.location.reload();
+    unloadScript();
+    setTokenSession(null);
+    setTokenSecurity(null);
   };
 
   const FormComponent =

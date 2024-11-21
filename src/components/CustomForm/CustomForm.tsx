@@ -127,13 +127,14 @@ const CustomForm: React.FC<CustomProps> = ({
                     setTokenizer(data as TokenizerResponse);
 
                     setShowLoader(false);
-
+                    onClose();
                 })
                 .catch(function (error) {
                     console.dir(error)
                     setErrorTokenizer(error as ErrorResponse);
-
+                    
                     setShowLoader(false);
+                    onClose();
                 });
 
             // onClose();
