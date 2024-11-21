@@ -78,9 +78,9 @@ const CustomForm: React.FC<CustomProps> = ({
             .string()
             .required('Ingresa el Apellido como figura en tu tarjeta.')
             .max(50, 'No debe exceder los 50 caracteres'),
-        tyc: Yup
-            .boolean()
-            .required('Este campo es requerido')
+        tyc: Yup.boolean().test('is-true', 'Este campo es requerido', (value) => {
+            return value === true;
+        })
     });
 
     const formik = useFormik({
@@ -196,7 +196,7 @@ const CustomForm: React.FC<CustomProps> = ({
             element.on('installments', function (data: any) {
             });
             element.on('lastFourDigits', function (data: any) {
-                setLastNumbers(data);
+                setLastNumbers(`**** **** **** ${data}`);
 
                 setCardNumberState(cardNumber);
 
@@ -420,7 +420,7 @@ const CustomForm: React.FC<CustomProps> = ({
                                                 id='tyc'
                                                 name='tyc'
                                                 value={values.tyc}
-                                                className={styles.formCheckbox}
+                                                className={`${styles.formCheckbox} ${errors.tyc && styles.formError}`}
                                                 onChange={handleInputChange}
                                             />
                                             <label
