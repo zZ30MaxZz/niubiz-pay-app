@@ -8,6 +8,7 @@ import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
 import { FinancialInstitution, getCardType } from '../../helper/card';
 import * as Yup from 'yup';
 import { useFormik } from "formik";
+import Loader from '../Loader/Loader';
 
 type CustomProps = {
     showForm: boolean;
@@ -37,6 +38,8 @@ const CustomForm: React.FC<CustomProps> = ({
     onClose
 }) => {
     const amount = '1.00';
+    const [showLoader, setShowLoader] = useState(false);
+
     const [isFlipped, setIsFlipped] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -100,13 +103,44 @@ const CustomForm: React.FC<CustomProps> = ({
             console.log(values);
             console.log('Formulario enviado');
 
+            setShowLoader(true);
 
+            var dataForm = {
+                name: values.cardFirstname,
+                lastName: values.cardLastname,
+                email: userEmail,
+                alias: userEmail,
+                userBlockId: userEmail,
+                currencyConversion: false,
+                amount: amount
+            };
+
+            const inputCard = [cardNumberState, cardExpiryState, cardCvvState];
+
+            window?.payform.createToken(
+                inputCard,
+                dataForm
+            )
+                .then(function (data) {
+                    console.log('DATA:', data);
+
+                    setTokenizer(data as TokenizerResponse);
+
+                    setShowLoader(false);
+
+                })
+                .catch(function (error) {
+                    console.dir(error)
+                    setErrorTokenizer(error as ErrorResponse);
+
+                    setShowLoader(false);
+                });
 
             // onClose();
         }
     });
 
-    const { values, errors, handleChange, handleSubmit, touched, isValid, setFieldTouched, resetForm } = formik;
+    const { values, errors, handleChange, handleSubmit, touched, isValid, setFieldTouched } = formik;
 
     useEffect(() => {
         const validateForm = async () => {
@@ -119,9 +153,6 @@ const CustomForm: React.FC<CustomProps> = ({
                 touched.tyc;
 
             setSuccessForm(isValid && (allFieldsTouched ?? false));
-
-
-            console.log('allFieldsTouched', errors);
         };
 
         validateForm();
@@ -307,32 +338,7 @@ const CustomForm: React.FC<CustomProps> = ({
     };
 
     const handleTransactionToken = () => {
-        var dataForm = {
-            name: values.cardFirstname,
-            lastName: values.cardLastname,
-            email: userEmail,
-            alias: userEmail,
-            userBlockId: userEmail,
-            currencyConversion: false,
-            amount: amount
-        };
-
-        const inputCard = [cardNumberState, cardExpiryState, cardCvvState];
-
-        window?.payform.createToken(
-            inputCard,
-            dataForm
-        )
-            .then(function (data) {
-                console.log('DATA:', data);
-
-                setTokenizer(data as TokenizerResponse);
-
-            })
-            .catch(function (error) {
-                console.dir(error)
-                setErrorTokenizer(error as ErrorResponse);
-            });
+        handleSubmit();
     };
 
     const handleOverlayClick = (e: React.MouseEvent) => {
@@ -344,6 +350,7 @@ const CustomForm: React.FC<CustomProps> = ({
     return (
         <>
             {/* <link rel="stylesheet" href={srcCss}></link> */}
+            {showLoader && <Loader color="#fff" size={40} />}
             <div className={styles.formContainer} onClick={handleOverlayClick}>
                 <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formHeader}>
