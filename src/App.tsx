@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import './App.css';
-import useNotification from './hooks/useNotification';
 import useNiubiz from './hooks/useNiubiz';
 import { MerchantDefineData } from './components/types';
 
@@ -69,9 +68,6 @@ function App() {
     }
   };
 
-
-
-  const { NotificationComponent, triggerNotification } = useNotification("bottom-left");
   const { FormComponent, triggerOpenForm } = useNiubiz(
     "userniubiz@mail.com",
     // "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
@@ -98,16 +94,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {NotificationComponent}
         {FormComponent}
-
-
         <div>
           <button onClick={generateToken}>Generar Token y Session</button>
           <div>TOKEN: {token}</div>
           <div>SESSION: {sessionKey}</div>
         </div>
-
         <button onClick={triggerOpenForm}>Open Form</button>
       </header>
     </div >

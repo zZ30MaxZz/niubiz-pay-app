@@ -83,6 +83,9 @@ const CustomForm: React.FC<CustomProps> = ({
             .string()
             .required('Ingresa el Apellido como figura en tu tarjeta.')
             .max(50, 'No debe exceder los 50 caracteres'),
+        cardName: Yup
+            .string()
+            .max(50, 'No debe exceder los 50 caracteres'),
         tyc: Yup.boolean().test('is-true', 'Este campo es requerido', (value) => {
             return value === true;
         })
@@ -95,6 +98,7 @@ const CustomForm: React.FC<CustomProps> = ({
             cardCvv: '',
             cardFirstname: '',
             cardLastname: '',
+            cardName: '',
             tyc: ''
         },
         validationSchema: cardSchema,
@@ -425,6 +429,17 @@ const CustomForm: React.FC<CustomProps> = ({
                                         name='cardLastname'
                                         value={values.cardLastname}
                                         error={touched.cardLastname ? errors.cardLastname : ''}
+                                        callbackOnChange={handleInputChange}
+                                        maxLength={50} />
+                                </div>
+                                <div className={styles.formRow}>
+                                    <InputGroup
+                                        id='cardName'
+                                        label='Nombre para la tarjeta a guardar'
+                                        type='text'
+                                        name='cardName'
+                                        value={values.cardName}
+                                        error={touched.cardName ? errors.cardName : ''}
                                         callbackOnChange={handleInputChange}
                                         maxLength={50} />
                                 </div>
