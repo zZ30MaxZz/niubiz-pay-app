@@ -43,7 +43,7 @@ export interface UseNiubizReturn {
 
 
 export interface SessionRequest {
-  amount: number
+  amount: string
   antifraud: Antifraud
   channel: string
 }

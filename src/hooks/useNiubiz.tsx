@@ -23,6 +23,7 @@ const useNiubiz = (
   MDD: MerchantDefineData,
   channelSession: string,
   channelToken: string,
+  amount: string,
   credentialEncoded?: string | null,
   merchandId?: string | null,
   token?: string | null,
@@ -104,7 +105,7 @@ const useNiubiz = (
         const url = `${baseUrl}${sessionService}/${merchandId}`;
 
         let requestParams: SessionRequest = {
-          amount: 1,
+          amount: amount,
           antifraud: {
             merchantDefineData: memoizedMDD,
           },
@@ -150,6 +151,7 @@ const useNiubiz = (
           channelToken={channelToken}
           tokenizerService={tokenizerService}
           tokenSecurity={token ?? tokenSecurity}
+          amount={amount}
           baseUrl={baseUrl}
         /> :
         <></>;

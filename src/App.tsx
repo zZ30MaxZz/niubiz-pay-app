@@ -9,6 +9,8 @@ function App() {
   const [token, setToken] = React.useState<string | null>(null);
   const [merchantId, setMerchantId] = React.useState<string | null>(null);
 
+  const amount = "199.9";
+
   const MDD: MerchantDefineData = useMemo(() => ({
     MDD4: 'mail@mail.com',
     MDD32: '12345789',
@@ -21,7 +23,7 @@ function App() {
 
     const bodyData = {
       Channel: "web",
-      Amount: "199.9",
+      Amount: amount,
       Currency: "PEN",
     };
 
@@ -85,6 +87,7 @@ function App() {
     MDD,
     "web",
     "web",
+    amount,
     "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
     // null,
     merchantId ?? "110777209",

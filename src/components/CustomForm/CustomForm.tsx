@@ -21,6 +21,7 @@ type CustomProps = {
     tokenizerService: string,
     tokenSecurity?: string | null,
     baseUrl: string,
+    amount: string;
     onClose: () => void;
 };
 
@@ -35,9 +36,9 @@ const CustomForm: React.FC<CustomProps> = ({
     tokenizerService,
     tokenSecurity,
     baseUrl,
+    amount,
     onClose
 }) => {
-    const amount = '1.00';
     const [showLoader, setShowLoader] = useState(false);
 
     const [isFlipped, setIsFlipped] = useState(false);
@@ -132,7 +133,7 @@ const CustomForm: React.FC<CustomProps> = ({
                 .catch(function (error) {
                     console.dir(error)
                     setErrorTokenizer(error as ErrorResponse);
-                    
+
                     setShowLoader(false);
                     onClose();
                 });
