@@ -27,8 +27,6 @@ const Card: React.FC<CustomProps> = ({
     number = number ? number : '**** **** **** ****';
     dateYear = dateYear ? dateYear : 'AA';
     dateMonth = dateMonth ? dateMonth : 'MM';
-    cvv = cvv ? cvv : '****';
-    owner = owner ? owner : 'Nombre del titular';
 
     let currentBrand = Object.values(FinancialInstitution).find(obj => obj.name === brand) ?? FinancialInstitution.NotFound;
 
@@ -41,8 +39,7 @@ const Card: React.FC<CustomProps> = ({
                     <div className={styles.cardBodyResume}>
                         {currentBrand.name && currentBrand.name !== FinancialInstitution.NotFound.name && <div className={styles.cardBrand}>{currentBrand.name}</div>}
                         <div className={styles.cardNumber}>{number}</div>
-                        <div className={styles.cardDate}>Vence el {dateMonth}/{dateYear}</div>
-                        <div className={styles.cardOwner}>{owner}</div>
+                        <div className={styles.cardOwner}>{owner && owner.trim() !== '' ? owner : 'Nombre del titular'}</div>
                         {currentBrand.name !== FinancialInstitution.NotFound.name &&
                             <div className={styles.cardBrandIconContainer}>
                                 <IconBrand />
@@ -56,7 +53,7 @@ const Card: React.FC<CustomProps> = ({
                         <IconHolder />
                     </div>
                     <div className={styles.cardBodyResume}>
-                        <div className={styles.cardCvv}>{cvv}</div>
+                        <div className={styles.cardCvv}>****</div>
                     </div>
                 </div>
             </div>

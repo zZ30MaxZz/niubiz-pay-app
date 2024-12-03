@@ -88,7 +88,8 @@ const CustomForm: React.FC<CustomProps> = ({
             .max(50, 'No debe exceder los 50 caracteres'),
         tyc: Yup.boolean().test('is-true', 'Este campo es requerido', (value) => {
             return value === true;
-        })
+        }),
+        favoriteCard: Yup.boolean()
     });
 
     const formik = useFormik({
@@ -99,7 +100,8 @@ const CustomForm: React.FC<CustomProps> = ({
             cardFirstname: '',
             cardLastname: '',
             cardName: '',
-            tyc: ''
+            tyc: false,
+            favoriteCard: false
         },
         validationSchema: cardSchema,
         validateOnChange: true,
@@ -448,16 +450,41 @@ const CustomForm: React.FC<CustomProps> = ({
                                         <div className={styles.formCheckboxContainer}>
                                             <input
                                                 type="checkbox"
+                                                id='favoriteCard'
+                                                name='favoriteCard'
+                                                checked={values.favoriteCard}
+                                                className={`${styles.formCheckbox} ${errors.favoriteCard && styles.formError}`}
+                                                onChange={handleInputChange}
+                                            />
+                                            <label
+                                                htmlFor="favoriteCard"
+                                                className={styles.formCheckboxLabel}
+                                            >Guardar tu tarjeta para futura compras</label>
+                                        </div>
+                                        {
+                                            errors.favoriteCard &&
+                                            <div className={styles.inputErrorContainer}>
+                                                <X size={20} color="#C82014" />
+                                                <div className={styles.inputError}>{errors.favoriteCard}</div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div className={styles.formRow}>
+                                    <div className={styles.inputContainer}>
+                                        <div className={styles.formCheckboxContainer}>
+                                            <input
+                                                type="checkbox"
                                                 id='tyc'
                                                 name='tyc'
-                                                value={values.tyc}
+                                                checked={values.tyc}
                                                 className={`${styles.formCheckbox} ${errors.tyc && styles.formError}`}
                                                 onChange={handleInputChange}
                                             />
                                             <label
                                                 htmlFor="tyc"
                                                 className={styles.formCheckboxLabel}
-                                            >He leido y acepto los terminos y condiciones </label>
+                                            >He leido y acepto los terminos y condiciones de Starbucks Rewards</label>
                                         </div>
                                         {
                                             errors.tyc &&
