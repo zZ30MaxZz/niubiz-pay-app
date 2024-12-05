@@ -12,6 +12,10 @@ export interface UseNiubizReturn {
   triggerOpenForm: () => void;
 }
 
+export interface UseNiubizPayReturn {
+  FormComponent: JSX.Element;
+}
+
 export interface SessionRequest {
   amount: string
   antifraud: Antifraud
