@@ -14,6 +14,8 @@ export interface UseNiubizReturn {
 
 export interface UseNiubizPayReturn {
   FormComponent: JSX.Element;
+  triggerSendForm: () => void;
+  formResponse: any
 }
 
 export interface SessionRequest {

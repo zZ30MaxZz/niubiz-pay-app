@@ -1,14 +1,13 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import {
   MerchantDefineData,
   SessionRequest,
   TokenSessionReturn,
   UseNiubizPayReturn
 } from "../components/types";
-import CustomForm from "../components/CustomForm/CustomForm";
 import GetNiubizToken from "../helper/GetNiubizToken";
 import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
-import Loader from "../components/Loader/Loader";
+import CustomPayForm from "components/CustomPayForm/CustomPayForm";
 
 
 const useNiubizPay = (
@@ -30,13 +29,16 @@ const useNiubizPay = (
   sessionKey?: string | null
 ): UseNiubizPayReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
-  const [showLoader, setShowLoader] = useState<boolean>(false);
+  const [showBlocked, setShowBlocked] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
 
   const [tokenSecurity, setTokenSecurity] = useState<string | null>();
   const [tokenSession, setTokenSession] = useState<TokenSessionReturn | null>();
 
   const memoizedMDD = useMemo(() => MDD, [MDD]);
+
+  const customPayRef = useRef<{ handleTransactionToken: () => void }>(null);
+  const [formResponse, setFormResponse] = useState();
 
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -49,7 +51,7 @@ const useNiubizPay = (
   };
 
   useEffect(() => {
-    setShowLoader(true);
+    setShowBlocked(true);
     const loadResources = async () => {
       try {
         await Promise.all([loadScript(srcCustomScript)]);
@@ -70,7 +72,7 @@ const useNiubizPay = (
     }
 
     if (token && token !== '') {
-      setShowLoader(false);
+      setShowBlocked(false);
       setShowForm(true);
     }
 
@@ -108,7 +110,7 @@ const useNiubizPay = (
 
         setTokenSession(response);
 
-        setShowLoader(false);
+        setShowBlocked(false);
       };
 
       handleGetTokenSession();
@@ -121,37 +123,44 @@ const useNiubizPay = (
     }
   }, [tokenSession, tokenSecurity]);
 
-  const handleOnClose = () => {
-    setShowForm(false);
-    setTokenSession(null);
-    setTokenSecurity(null);
-  };
+  // Reset Form
+  // const resetForm = () => {
+  //   setShowForm(false);
+  //   setTokenSession(null);
+  //   setTokenSecurity(null);
+  // };
 
   const FormComponent =
-    showLoader ?
-      <Loader color="#fff" size={40} /> :
-      showForm ?
-        <CustomForm
-          showForm={showForm}
-          srcCss={srcCustomCss}
-          tokenSession={sessionKey ?? tokenSession?.sessionKey}
-          merchandId={merchandId ?? ""}
-          purchasenumber={purchasenumber}
-          onClose={handleOnClose}
-          userEmail={userEmail}
-          channelToken={channelToken}
-          tokenizerService={tokenizerService}
-          tokenSecurity={token ?? tokenSecurity}
-          amount={amount}
-          baseUrl={baseUrl}
-        /> :
-        <></>;
+    <CustomPayForm
+      ref={customPayRef}
+      setFormResponse={setFormResponse}
+      showForm={showForm}
+      showBlocked={showBlocked}
+      srcCss={srcCustomCss}
+      tokenSession={sessionKey ?? tokenSession?.sessionKey}
+      merchandId={merchandId ?? ""}
+      purchasenumber={purchasenumber}
+      userEmail={userEmail}
+      channelToken={channelToken}
+      tokenizerService={tokenizerService}
+      tokenSecurity={token ?? tokenSecurity}
+      amount={amount}
+      baseUrl={baseUrl}
+    />;
 
   const loadCustomTag = async () => {
     console.log('Librerias listas para usar');
   };
 
-  return { FormComponent };
+  const triggerSendForm = useCallback(() => {
+    console.log('triggerSendForm');
+
+    if (customPayRef.current) {
+      customPayRef.current.handleTransactionToken();
+    }
+  }, [customPayRef]);
+
+  return { FormComponent, triggerSendForm, formResponse };
 };
 
 export default useNiubizPay;
