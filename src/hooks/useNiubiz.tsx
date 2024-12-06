@@ -48,14 +48,6 @@ const useNiubiz = (
     });
   };
 
-  const unloadScript = useCallback(() => {
-    const scriptExists = document.querySelector(`script[src="${srcCustomScript}"]`);
-    if (scriptExists) {
-      // document.body.removeChild(scriptExists);
-    }
-    setScriptsLoaded(false);
-  }, [srcCustomScript]);
-
   const triggerOpenForm = useCallback(() => {
     setShowLoader(true);
     const loadResources = async () => {
@@ -131,7 +123,7 @@ const useNiubiz = (
 
   const handleOnClose = () => {
     setShowForm(false);
-    unloadScript();
+    setScriptsLoaded(false);
     setTokenSession(null);
     setTokenSecurity(null);
   };
