@@ -7,7 +7,7 @@ const HomePage = () => {
     const [token, setToken] = React.useState<string | null>(null);
     const [merchantId, setMerchantId] = React.useState<string | null>(null);
 
-    const amount = "199.9";
+    const amount = "1";
 
     const MDD: MerchantDefineData = useMemo(() => ({
         MDD4: 'mail@mail.com',
@@ -80,8 +80,8 @@ const HomePage = () => {
         "https://pocpaymentserve.s3.amazonaws.com/payform.min.js",
         "https://pocpaymentserve.s3.amazonaws.com/payform.min.css",
         MDD,
-        "web",
-        "web",
+        "paycard",
+        "paycard",
         amount,
         "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
         // null,
