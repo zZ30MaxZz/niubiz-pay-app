@@ -15,6 +15,7 @@ export interface UseNiubizReturn {
 export interface UseNiubizPayReturn {
   FormComponent: JSX.Element;
   triggerSendForm: () => void;
+  triggerResetForm: () => void;
   formResponse: any
 }
 

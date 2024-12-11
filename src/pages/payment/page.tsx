@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { MerchantDefineData } from 'components/types';
-import useNiubizPay from 'hooks/useNiubizPay';
+import useNiubizPayment from 'hooks/useNiubizPayment';
 
 const PaymentPage = () => {
     const [sessionKey, setsessionKey] = React.useState<string | null>(null);
@@ -19,6 +19,7 @@ const PaymentPage = () => {
     const generateToken = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        
         const bodyData = {
             Channel: "web",
             Amount: amount,
@@ -59,6 +60,8 @@ const PaymentPage = () => {
                 setToken(data.data.authorization);
                 setsessionKey(data.data.sessionKey);
                 setMerchantId(data.data.merchantId);
+                
+                await triggerResetForm();
             } else {
                 console.error("Request failed with message:", data.message);
             }
@@ -67,7 +70,7 @@ const PaymentPage = () => {
         }
     };
 
-    const { FormComponent, triggerSendForm, formResponse } = useNiubizPay(
+    const { FormComponent, triggerSendForm, formResponse, triggerResetForm } = useNiubizPayment(
         "userniubiz@mail.com",
         // "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
         // "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",

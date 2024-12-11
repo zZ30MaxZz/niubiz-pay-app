@@ -10,7 +10,7 @@ import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
 import CustomPayForm from "components/CustomPayForm/CustomPayForm";
 
 
-const useNiubizPay = (
+const useNiubizPayment = (
   userEmail: string,
   purchasenumber: number,
   baseUrl: string,
@@ -37,11 +37,18 @@ const useNiubizPay = (
 
   const memoizedMDD = useMemo(() => MDD, [MDD]);
 
-  const customPayRef = useRef<{ handleTransactionToken: () => void }>(null);
+  const customPayRef = useRef<{ resetForm: () => void, handleTransactionToken: () => void }>(null);
   const [formResponse, setFormResponse] = useState();
 
   const loadScript = (src: string) => {
+    console.log('Cargando script', src);
     return new Promise<void>((resolve, reject) => {
+      const scriptExists = document.querySelector(`script[src="${srcCustomScript}"]`);
+      if (scriptExists) {
+        console.log('Script ya cargado');
+        return;
+      }
+
       const script = document.createElement("script");
       script.src = src;
       script.onload = () => resolve();
@@ -54,6 +61,8 @@ const useNiubizPay = (
     setShowBlocked(true);
     const loadResources = async () => {
       try {
+        if (scriptsLoaded) return;
+
         await Promise.all([loadScript(srcCustomScript)]);
         setScriptsLoaded(true);
 
@@ -123,12 +132,13 @@ const useNiubizPay = (
     }
   }, [tokenSession, tokenSecurity]);
 
-  // Reset Form
-  // const resetForm = () => {
-  //   setShowForm(false);
-  //   setTokenSession(null);
-  //   setTokenSecurity(null);
-  // };
+  useEffect(() => {
+    if (token && sessionKey){
+      setShowForm(true);
+      setScriptsLoaded(true);
+    }
+
+  }, [token, sessionKey])
 
   const FormComponent =
     <CustomPayForm
@@ -160,7 +170,15 @@ const useNiubizPay = (
     }
   }, [customPayRef]);
 
-  return { FormComponent, triggerSendForm, formResponse };
+  // Reset Form
+  const triggerResetForm = async () => {
+    setShowForm(false);
+    setTokenSession(null);
+    setTokenSecurity(null);
+    setScriptsLoaded(false);
+  };
+
+  return { FormComponent, triggerSendForm, formResponse, triggerResetForm };
 };
 
-export default useNiubizPay;
+export default useNiubizPayment;

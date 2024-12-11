@@ -134,14 +134,14 @@ const CustomForm: React.FC<CustomProps> = ({
                     setTokenizer(data as TokenizerResponse);
 
                     setShowLoader(false);
-                    onClose();
+                    // onClose();
                 })
                 .catch(function (error) {
                     console.dir(error)
                     setErrorTokenizer(error as ErrorResponse);
 
                     setShowLoader(false);
-                    onClose();
+                    // onClose();
                 });
 
             // onClose();
@@ -319,6 +319,7 @@ const CustomForm: React.FC<CustomProps> = ({
     }, []);
 
     useEffect(() => {
+        console.log('///////////////tokenizer', tokenizer);
         const fetchData = async () => {
             if (tokenizer?.transactionToken && tokenSecurity) {
                 const url = `${baseUrl}${tokenizerService}/${merchandId}/${tokenizer.transactionToken}`;
