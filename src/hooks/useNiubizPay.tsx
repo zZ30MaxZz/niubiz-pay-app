@@ -14,11 +14,13 @@ import CustomPayForm from "components/CustomPayForm/CustomPayForm";
 
 const useNiubizPay = (
   userEmail: string,
+  documentType: string,
+  documentUser: string,
   purchasenumber: number,
   baseUrl: string,
   tokenService: string,
   sessionService: string,
-  tokenizerService: string,
+  authorizationService: string,
   srcCustomScript: string,
   srcCustomCss: string,
   MDD: MerchantDefineData,
@@ -136,6 +138,8 @@ const useNiubizPay = (
   const FormComponent =
     !showLoader && showForm ?
       <CustomPayForm
+        documentType={documentType}
+        documentUser={documentUser}
         ref={customPayRef}
         setFormResponse={setFormResponse}
         showForm={showForm}
@@ -147,7 +151,7 @@ const useNiubizPay = (
         onClose={handleOnClose}
         userEmail={userEmail}
         channelToken={channelToken}
-        tokenizerService={tokenizerService}
+        authorizationService={authorizationService}
         tokenSecurity={token ?? tokenSecurity}
         amount={amount}
         baseUrl={baseUrl}

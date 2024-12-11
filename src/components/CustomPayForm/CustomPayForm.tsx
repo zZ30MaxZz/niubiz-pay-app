@@ -9,8 +9,11 @@ import { FinancialInstitution, getCardType } from '../../helper/card';
 import * as Yup from 'yup';
 import { useFormik } from "formik";
 import Loader from '../Loader/Loader';
+import PostNiubizAuthorize from 'helper/PostNiubizAuthorize';
 
 type CustomPayProps = {
+    documentType: string,
+    documentUser: string,
     setFormResponse: any;
     showForm: boolean;
     showBlocked: boolean;
@@ -20,7 +23,7 @@ type CustomPayProps = {
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
-    tokenizerService: string,
+    authorizationService: string,
     tokenSecurity?: string | null,
     baseUrl: string,
     amount: string;
@@ -28,6 +31,8 @@ type CustomPayProps = {
 };
 
 const CustomPayForm = forwardRef(({
+    documentType,
+    documentUser,
     setFormResponse,
     showForm,
     showBlocked,
@@ -37,7 +42,7 @@ const CustomPayForm = forwardRef(({
     purchasenumber,
     userEmail,
     channelToken,
-    tokenizerService,
+    authorizationService,
     tokenSecurity,
     baseUrl,
     amount,
@@ -105,9 +110,6 @@ const CustomPayForm = forwardRef(({
         validateOnChange: true,
         validateOnBlur: false,
         onSubmit: async (values) => {
-            console.log(values);
-            console.log('Formulario enviado');
-
             setShowLoader(true);
 
             var dataForm = {
@@ -117,7 +119,7 @@ const CustomPayForm = forwardRef(({
                 alias: userEmail,
                 userBlockId: userEmail,
                 currencyConversion: false,
-                amount: amount
+                recurrence: false
             };
 
             const inputCard = [cardNumberState, cardExpiryState, cardCvvState];
@@ -127,12 +129,9 @@ const CustomPayForm = forwardRef(({
                 dataForm
             )
                 .then(function (data) {
-                    console.log('DATA:', data);
-
                     setTokenizer(data as TokenizerResponse);
 
                     setShowLoader(false);
-                    setFormResponse(data);
                 })
                 .catch(function (error) {
                     console.dir(error)
@@ -215,7 +214,6 @@ const CustomPayForm = forwardRef(({
 
         cardNumber.then(element => {
             element.on('bin', function (data: any) {
-                console.log(data);
                 let numberCard = getCardType(data);
 
                 if (numberCard)
@@ -318,18 +316,37 @@ const CustomPayForm = forwardRef(({
     useEffect(() => {
         const fetchData = async () => {
             if (tokenizer?.transactionToken && tokenSecurity) {
-                const url = `${baseUrl}${tokenizerService}/${merchandId}/${tokenizer.transactionToken}`;
-                const response = await GetNiubizTokenizerCard(url, tokenSecurity);
+                const url = `${baseUrl}${authorizationService}/${merchandId}`;
+
+                const data =
+                {
+                    "channel": "web",
+                    "captureType": "manual",
+                    "countable": true,
+                    "order": {
+                        "tokenId": tokenizer.transactionToken,
+                        "purchaseNumber": purchasenumber,
+                        "amount": amount,
+                        "currency": "PEN",
+                        "productId": "329"
+                    },
+                    "cardHolder": {
+                        "documentType": documentType,
+                        "documentNumber": documentUser
+                    }
+                }
+
+                const response = await PostNiubizAuthorize(url, tokenSecurity, data);
 
                 if (response) {
-                    console.log(response)
+                    setFormResponse(response);
                 }
             }
         };
 
         fetchData();
 
-    }, [tokenizer, merchandId, tokenSecurity, tokenizerService]);
+    }, [tokenizer, merchandId, tokenSecurity, authorizationService]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

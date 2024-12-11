@@ -47,7 +47,6 @@ interface Window {
                 alias: string,
                 userBlockId: string,
                 currencyConversion: boolean,
-                amount: string
 
             }) => Promise<any>
     }

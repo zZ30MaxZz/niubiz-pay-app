@@ -7,7 +7,7 @@ const PayPage = () => {
     const [token, setToken] = React.useState<string | null>(null);
     const [merchantId, setMerchantId] = React.useState<string | null>(null);
 
-    const amount = "1";
+    const amount = "199.9";
 
     const MDD: MerchantDefineData = useMemo(() => ({
         MDD4: 'mail@mail.com',
@@ -69,19 +69,20 @@ const PayPage = () => {
 
     const { FormComponent, triggerOpenForm, triggerSendForm, formResponse, triggerResetForm } = useNiubizPay(
         "userniubiz@mail.com",
+        "0",
+        "44554444",
         Math.floor(Math.random() * 120000) + 1,
         "https://apisandbox.vnforappstest.com",
         "/api.security/v1/security",
         "/api.ecommerce/v2/ecommerce/token/session",
-        "/api.ecommerce/v2/ecommerce/token/card",
+        "/api.authorization/v3/authorization/ecommerce",
         "https://pocpaymentserve.s3.amazonaws.com/payform.min.js",
         "https://pocpaymentserve.s3.amazonaws.com/payform.min.css",
         MDD,
-        "paycard",
-        "paycard",
+        "web",
+        "web",
         amount,
         "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
-        // null,
         merchantId ?? "110777209",
         token,
         sessionKey
