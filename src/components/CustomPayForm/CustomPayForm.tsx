@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import styles from "./customPayForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import Card from '../Card/Card';
@@ -11,7 +11,9 @@ import { useFormik } from "formik";
 import Loader from '../Loader/Loader';
 
 type CustomPayProps = {
+    setFormResponse: any;
     showForm: boolean;
+    showBlocked: boolean;
     srcCss: string;
     tokenSession?: string;
     merchandId: string,
@@ -25,8 +27,10 @@ type CustomPayProps = {
     onClose: () => void;
 };
 
-const CustomPayForm: React.FC<CustomPayProps> = ({
+const CustomPayForm = forwardRef(({
+    setFormResponse,
     showForm,
+    showBlocked,
     srcCss,
     tokenSession,
     merchandId,
@@ -38,7 +42,7 @@ const CustomPayForm: React.FC<CustomPayProps> = ({
     baseUrl,
     amount,
     onClose
-}) => {
+}: CustomPayProps, ref) => {
     const [showLoader, setShowLoader] = useState(false);
 
     const [isFlipped, setIsFlipped] = useState(false);
@@ -128,7 +132,7 @@ const CustomPayForm: React.FC<CustomPayProps> = ({
                     setTokenizer(data as TokenizerResponse);
 
                     setShowLoader(false);
-                    // onClose();
+                    setFormResponse(data);
                 })
                 .catch(function (error) {
                     console.dir(error)
@@ -327,10 +331,6 @@ const CustomPayForm: React.FC<CustomPayProps> = ({
 
     }, [tokenizer, merchandId, tokenSecurity, tokenizerService]);
 
-    if (!showForm) {
-        return null;
-    }
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -342,16 +342,18 @@ const CustomPayForm: React.FC<CustomPayProps> = ({
         handleSubmit();
     };
 
-    const handleOverlayClick = (e: React.MouseEvent) => {
-        if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-            // onClose();
-        }
-    };
+    useImperativeHandle(ref, () => ({
+        handleTransactionToken
+    }));
+
+    if (!showForm) {
+        return null;
+    }
 
     return (
         <>
             {showLoader && <Loader color="#fff" size={40} />}
-            <div className={styles.formContainer} onClick={handleOverlayClick}>
+            <div className={styles.formContainer}>
                 <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formBody}>
                         <div className={styles.formContent}>
@@ -421,6 +423,6 @@ const CustomPayForm: React.FC<CustomPayProps> = ({
             </div>
         </>
     );
-};
+});
 
 export default CustomPayForm;

@@ -12,8 +12,16 @@ export interface UseNiubizReturn {
   triggerOpenForm: () => void;
 }
 
+export interface UseNiubizPaymentReturn {
+  FormComponent: JSX.Element;
+  triggerSendForm: () => void;
+  triggerResetForm: () => void;
+  formResponse: any
+}
+
 export interface UseNiubizPayReturn {
   FormComponent: JSX.Element;
+  triggerOpenForm: () => void;
   triggerSendForm: () => void;
   triggerResetForm: () => void;
   formResponse: any

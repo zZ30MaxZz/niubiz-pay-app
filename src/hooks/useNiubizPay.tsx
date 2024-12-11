@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import {
   MerchantDefineData,
   SessionRequest,
   TokenSessionReturn,
-  UseNiubizReturn,
+  UseNiubizPayReturn,
 } from "../components/types";
 import CustomForm from "../components/CustomForm/CustomForm";
 import GetNiubizToken from "../helper/GetNiubizToken";
@@ -29,7 +29,7 @@ const useNiubizPay = (
   merchandId?: string | null,
   token?: string | null,
   sessionKey?: string | null
-): UseNiubizReturn => {
+): UseNiubizPayReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
@@ -38,6 +38,10 @@ const useNiubizPay = (
   const [tokenSession, setTokenSession] = useState<TokenSessionReturn | null>();
 
   const memoizedMDD = useMemo(() => MDD, [MDD]);
+
+  const customPayRef = useRef<{ resetForm: () => void, handleTransactionToken: () => void }>(null);
+  const [formResponse, setFormResponse] = useState();
+
 
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -132,7 +136,10 @@ const useNiubizPay = (
   const FormComponent =
     !showLoader && showForm ?
       <CustomPayForm
+        ref={customPayRef}
+        setFormResponse={setFormResponse}
         showForm={showForm}
+        showBlocked={showForm}
         srcCss={srcCustomCss}
         tokenSession={sessionKey ?? tokenSession?.sessionKey}
         merchandId={merchandId ?? ""}
@@ -151,7 +158,20 @@ const useNiubizPay = (
     console.log('Librerias listas para usar');
   };
 
-  return { FormComponent, triggerOpenForm };
+  const triggerSendForm = useCallback(() => {
+    console.log('triggerSendForm');
+
+    if (customPayRef.current) {
+      customPayRef.current.handleTransactionToken();
+    }
+  }, [customPayRef]);
+
+  const triggerResetForm = async () => {
+    handleOnClose();
+  };
+
+  return { FormComponent, triggerOpenForm, triggerSendForm, formResponse, triggerResetForm };
+
 };
 
 export default useNiubizPay;

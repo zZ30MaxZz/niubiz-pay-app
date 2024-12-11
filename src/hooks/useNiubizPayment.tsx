@@ -3,7 +3,7 @@ import {
   MerchantDefineData,
   SessionRequest,
   TokenSessionReturn,
-  UseNiubizPayReturn
+  UseNiubizPaymentReturn
 } from "../components/types";
 import GetNiubizToken from "../helper/GetNiubizToken";
 import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
@@ -27,7 +27,7 @@ const useNiubizPayment = (
   merchandId?: string | null,
   token?: string | null,
   sessionKey?: string | null
-): UseNiubizPayReturn => {
+): UseNiubizPaymentReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showBlocked, setShowBlocked] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);

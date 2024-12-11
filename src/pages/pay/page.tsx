@@ -1,6 +1,6 @@
 import { MerchantDefineData } from 'components/types';
 import useNiubizPay from 'hooks/useNiubizPay';
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 const PayPage = () => {
     const [sessionKey, setsessionKey] = React.useState<string | null>(null);
@@ -67,7 +67,7 @@ const PayPage = () => {
         }
     };
 
-    const { FormComponent, triggerOpenForm } = useNiubizPay(
+    const { FormComponent, triggerOpenForm, triggerSendForm, formResponse, triggerResetForm } = useNiubizPay(
         "userniubiz@mail.com",
         Math.floor(Math.random() * 120000) + 1,
         "https://apisandbox.vnforappstest.com",
@@ -87,6 +87,11 @@ const PayPage = () => {
         sessionKey
     );
 
+    useEffect(() => {
+        console.log('Respuesta del formulario PAY 😁', formResponse);
+
+    }, [formResponse])
+
     return (
         <div>
             <div>
@@ -100,6 +105,8 @@ const PayPage = () => {
                 {FormComponent}
             </div>
             <button onClick={triggerOpenForm}>Open Form</button>
+            <button onClick={triggerResetForm}>Reset Form</button>
+            <button onClick={triggerSendForm}>Send Form</button>
         </div >
     )
 }
