@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import styles from "./customPayForm.module.scss";
+import styles from "./customPaymentForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import InputGroup from '../InputGroup/InputGroup';
 import { ErrorResponse, TokenizerResponse } from '../types';

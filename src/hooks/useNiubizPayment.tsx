@@ -7,7 +7,7 @@ import {
 } from "../components/types";
 import GetNiubizToken from "../helper/GetNiubizToken";
 import GetNiubizTokenSession from "../helper/GetNiubizTokenSession";
-import CustomPayForm from "components/CustomPayForm/CustomPayForm";
+import CustomPaymentForm from "components/CustomPaymentForm/CustomPaymentForm";
 
 
 const useNiubizPayment = (
@@ -141,7 +141,7 @@ const useNiubizPayment = (
   }, [token, sessionKey])
 
   const FormComponent =
-    <CustomPayForm
+    <CustomPaymentForm
       ref={customPayRef}
       setFormResponse={setFormResponse}
       showForm={showForm}
