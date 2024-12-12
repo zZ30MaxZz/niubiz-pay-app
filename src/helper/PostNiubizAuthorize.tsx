@@ -1,4 +1,4 @@
-import { DataResponse, TokenSessionReturn } from "../components/types";
+import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
 const PostNiubizAuthorize = async (
