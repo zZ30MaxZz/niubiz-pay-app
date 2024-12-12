@@ -49,13 +49,7 @@ const PayPage = () => {
                 message: string;
             } = await response.json();
 
-            console.log("Response data:", data);
-
             if (data.isSuccess) {
-                console.log("Session Key:", data.data.sessionKey);
-                console.log("Authorization Token:", data.data.authorization);
-                console.log("Expiration Time:", new Date(data.data.expirationTime));
-
                 setToken(data.data.authorization);
                 setsessionKey(data.data.sessionKey);
                 setMerchantId(data.data.merchantId);

@@ -1,25 +1,42 @@
-import { TokenSessionReturn } from "../components/types";
+import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
 const GetNiubizTokenSession = async (
     url: string,
     authorization: string,
     params: any
-): Promise<TokenSessionReturn> => {
-    let tokenSession: TokenSessionReturn;
-
+): Promise<DataResponse> => {
     const options = { method: "POST" };
 
     try {
         const response = await fetcher(url, options, params, authorization);
 
-        tokenSession = response;
+        if (response.success) {
+            const dataResponse = {
+                success: true,
+                code: "000",
+                data: response.data
+            }
 
-        return tokenSession;
+            return dataResponse;
+        }
+        else {
+            const dataResponse = {
+                success: false,
+                code: "002",
+                data: response
+            }
 
+            return dataResponse
+        }
     } catch (error) {
-        console.error("Error fetching Niubiz token:", error);
-        return tokenSession = { sessionKey: "", expirationTime: 0 };
+        const dataResponse = {
+            success: false,
+            code: "003",
+            data: error
+        }
+
+        return dataResponse;
     }
 };
 

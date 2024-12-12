@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import {
+  DataResponse,
   MerchantDefineData,
   SessionRequest,
   TokenSessionReturn,
@@ -42,8 +43,11 @@ const useNiubizPay = (
   const memoizedMDD = useMemo(() => MDD, [MDD]);
 
   const customPayRef = useRef<{ resetForm: () => void, handleTransactionToken: () => void }>(null);
-  const [formResponse, setFormResponse] = useState();
-
+  const [formResponse, setFormResponse] = useState<DataResponse>({
+    success: false,
+    code: "000",
+    data: null
+  });
 
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -88,8 +92,12 @@ const useNiubizPay = (
 
       const response = await GetNiubizToken(url, credentialEncoded);
 
-      setTokenSecurity(response.tokenSecurity);
-
+      if (response.success) {
+        setTokenSecurity(response.data);
+      }
+      else {
+        setFormResponse(response);
+      }
     };
 
     handleGetTokenSecurity();
@@ -113,7 +121,12 @@ const useNiubizPay = (
 
         const response = await GetNiubizTokenSession(url, tokenSecurity, requestParams);
 
-        setTokenSession(response);
+        if (response.success) {
+          setTokenSession(response.data);
+        }
+        else {
+          setFormResponse(response);
+        }
 
         setShowLoader(false);
       };
@@ -163,8 +176,6 @@ const useNiubizPay = (
   };
 
   const triggerSendForm = useCallback(() => {
-    console.log('triggerSendForm');
-
     if (customPayRef.current) {
       customPayRef.current.handleTransactionToken();
     }

@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import {
+  DataResponse,
   MerchantDefineData,
   SessionRequest,
   TokenSessionReturn,
@@ -37,6 +38,11 @@ const useNiubiz = (
   const [tokenSession, setTokenSession] = useState<TokenSessionReturn | null>();
 
   const memoizedMDD = useMemo(() => MDD, [MDD]);
+  const [formResponse, setFormResponse] = useState<DataResponse>({
+    success: false,
+    code: "000",
+    data: null
+  });
 
   const loadScript = (src: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -57,7 +63,13 @@ const useNiubiz = (
 
         loadCustomTag();
       } catch (error) {
-        console.error(error);
+        const dataResponse = {
+          success: false,
+          code: "001",
+          data: error
+        }
+
+        setFormResponse(dataResponse);
       }
     };
 
@@ -69,7 +81,7 @@ const useNiubiz = (
       return;
     }
 
-    if (token && token !== ''){
+    if (token && token !== '') {
       setShowLoader(false);
       setShowForm(true);
     }
@@ -81,8 +93,12 @@ const useNiubiz = (
 
       const response = await GetNiubizToken(url, credentialEncoded);
 
-      setTokenSecurity(response.tokenSecurity);
-
+      if (response.success) {
+        setTokenSecurity(response.data);
+      }
+      else {
+        setFormResponse(response);
+      }
     };
 
     handleGetTokenSecurity();
@@ -106,7 +122,12 @@ const useNiubiz = (
 
         const response = await GetNiubizTokenSession(url, tokenSecurity, requestParams);
 
-        setTokenSession(response);
+        if (response.success) {
+          setTokenSession(response.data);
+        }
+        else {
+          setFormResponse(response);
+        }
 
         setShowLoader(false);
       };
@@ -133,6 +154,7 @@ const useNiubiz = (
       <Loader color="#fff" size={40} /> :
       showForm ?
         <CustomForm
+          setFormResponse={setFormResponse}
           showForm={showForm}
           srcCss={srcCustomCss}
           tokenSession={sessionKey ?? tokenSession?.sessionKey}
@@ -152,7 +174,7 @@ const useNiubiz = (
     console.log('Librerias listas para usar');
   };
 
-  return { FormComponent, triggerOpenForm };
+  return { FormComponent, triggerOpenForm, formResponse };
 };
 
 export default useNiubiz;

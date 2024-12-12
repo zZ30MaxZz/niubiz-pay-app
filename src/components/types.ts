@@ -10,6 +10,7 @@ export interface TokenSessionReturn {
 export interface UseNiubizReturn {
   FormComponent: JSX.Element;
   triggerOpenForm: () => void;
+  formResponse: DataResponse
 }
 
 export interface UseNiubizPayReturn {
@@ -50,4 +51,10 @@ export interface ErrorResponse {
 }
 
 export interface Data { }
+
+export interface DataResponse {
+  success: false | boolean;
+  code: String
+  data: any
+}
 

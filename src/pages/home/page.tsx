@@ -1,6 +1,6 @@
 import { MerchantDefineData } from 'components/types';
 import useNiubiz from 'hooks/useNiubiz';
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
 const HomePage = () => {
     const [sessionKey, setsessionKey] = React.useState<string | null>(null);
@@ -49,13 +49,7 @@ const HomePage = () => {
                 message: string;
             } = await response.json();
 
-            console.log("Response data:", data);
-
             if (data.isSuccess) {
-                console.log("Session Key:", data.data.sessionKey);
-                console.log("Authorization Token:", data.data.authorization);
-                console.log("Expiration Time:", new Date(data.data.expirationTime));
-
                 setToken(data.data.authorization);
                 setsessionKey(data.data.sessionKey);
                 setMerchantId(data.data.merchantId);
@@ -67,7 +61,7 @@ const HomePage = () => {
         }
     };
 
-    const { FormComponent, triggerOpenForm } = useNiubiz(
+    const { FormComponent, triggerOpenForm, formResponse } = useNiubiz(
         "userniubiz@mail.com",
         // "aW50ZWdyYWNpb25lcy52aXNhbmV0QG5lY29tcGx1cy5jb206ZDVlN25rJE0=",
         // "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
@@ -89,6 +83,11 @@ const HomePage = () => {
         token,
         sessionKey
     );
+
+    useEffect(() => {
+        console.log('Respuesta del formulario TOKENIZER 😁', formResponse);
+
+    }, [formResponse])
 
     return (
         <div>

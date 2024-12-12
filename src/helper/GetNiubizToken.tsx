@@ -1,23 +1,45 @@
-import { TokenReturn } from "../components/types";
+import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
 const GetNiubizToken = async (
     url: string,
     credentialEncoded: string
-): Promise<TokenReturn> => {
+): Promise<DataResponse> => {
     let tokenSecurity = '';
     const authorization = "Basic " + credentialEncoded;
     const options = { method: "POST" };
 
     try {
         const response = await fetcher(url, options, null, authorization);
+        
+        if (response.success) {
+            tokenSecurity = typeof response.data === "string" ? response.data : '';
 
-        tokenSecurity = typeof response === "string" ? response : '';
+            const dataResponse = {
+                success: true,
+                code: "000",
+                data: tokenSecurity
+            }
 
-        return { tokenSecurity };
+            return dataResponse;
+        }
+        else {
+            const dataResponse = {
+                success: false,
+                code: "002",
+                data: response
+            }
+
+            return dataResponse
+        }
     } catch (error) {
-        console.error("Error fetching Niubiz token:", error);
-        return { tokenSecurity };
+        const dataResponse = {
+            success: false,
+            code: "003",
+            data: error
+        }
+
+        return dataResponse;
     }
 };
 

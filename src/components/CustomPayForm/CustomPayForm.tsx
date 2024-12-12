@@ -339,7 +339,13 @@ const CustomPayForm = forwardRef(({
                 const response = await PostNiubizAuthorize(url, tokenSecurity, data);
 
                 if (response) {
-                    setFormResponse(response);
+                    const dataResponse = {
+                        success: response.success,
+                        code: "000",
+                        data: response.data
+                    }
+
+                    setFormResponse(dataResponse);
                 }
             }
         };

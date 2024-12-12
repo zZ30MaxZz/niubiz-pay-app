@@ -1,9 +1,11 @@
+import { DataResponse } from "components/types";
+
 export const fetcher = async (
     url: string,
     options: any,
     params: any,
     authorization: string
-): Promise<any> => {
+): Promise<DataResponse> => {
     if (options.method === "GET" && params !== null) {
         url += "?" + new URLSearchParams(params).toString();
     } else if (options.method === "POST" && params !== null) {
@@ -19,18 +21,45 @@ export const fetcher = async (
         const response = await fetch(url, { ...options, headers });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const dataResponse = {
+                success: false,
+                code: "005",
+                data: response
+            }
+    
+            return dataResponse;
         }
 
         const contentType = response.headers.get("content-type");
 
         if (contentType && contentType.indexOf("application/json") !== -1) {
-            return await response.json();
+            const data = await response.json();
+
+            const dataResponse = {
+                success: true,
+                code: "000",
+                data: data
+            }
+
+            return dataResponse;
         } else {
-            return await response.text();
+            const data = await response.text();
+
+            const dataResponse = {
+                success: true,
+                code: "000",
+                data: data
+            }
+
+            return dataResponse;
         }
     } catch (error) {
-        console.error("Error in fetcher:", error);
-        throw error; 
+        const dataResponse = {
+            success: false,
+            code: "005",
+            data: error
+        }
+
+        return dataResponse;
     }
 };
