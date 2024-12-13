@@ -3,7 +3,7 @@ import styles from "./customForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import Card from '../Card/Card';
 import InputGroup from '../InputGroup/InputGroup';
-import { ErrorResponse, TokenizerResponse } from '../types';
+import { TokenizerResponse } from '../types';
 import GetNiubizTokenizerCard from '../../helper/GetNiubizTokenizerCard';
 import { FinancialInstitution, getCardType } from '../../helper/card';
 import * as Yup from 'yup';
