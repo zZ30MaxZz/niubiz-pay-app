@@ -1,4 +1,3 @@
-import { messageCode } from "components/messages";
 import { DataResponse } from "components/types";
 
 export const fetcher = async (
