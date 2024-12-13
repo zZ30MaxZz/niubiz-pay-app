@@ -95,6 +95,9 @@ const useNiubizPay = (
       }
       else {
         setFormResponse(response);
+
+        setShowLoader(false);
+        setShowForm(false);
       }
     };
 
@@ -124,6 +127,9 @@ const useNiubizPay = (
         }
         else {
           setFormResponse(response);
+
+          setShowLoader(false);
+          setShowForm(false);
         }
 
         setShowLoader(false);

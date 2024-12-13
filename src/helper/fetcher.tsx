@@ -1,3 +1,4 @@
+import { messageCode } from "components/messages";
 import { DataResponse } from "components/types";
 
 export const fetcher = async (
@@ -21,13 +22,7 @@ export const fetcher = async (
         const response = await fetch(url, { ...options, headers });
 
         if (!response.ok) {
-            const dataResponse = {
-                success: false,
-                code: "005",
-                data: response
-            }
-    
-            return dataResponse;
+            throw await response.json();
         }
 
         const contentType = response.headers.get("content-type");
@@ -54,12 +49,6 @@ export const fetcher = async (
             return dataResponse;
         }
     } catch (error) {
-        const dataResponse = {
-            success: false,
-            code: "005",
-            data: error
-        }
-
-        return dataResponse;
+        throw error;
     }
 };

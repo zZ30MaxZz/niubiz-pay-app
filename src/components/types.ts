@@ -55,6 +55,6 @@ export interface Data { }
 export interface DataResponse {
   success: false | boolean;
   code: String
-  data: any
+  data: any,
+  message?: string
 }
-

@@ -1,3 +1,4 @@
+import { messageCode } from "components/messages";
 import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
@@ -22,8 +23,9 @@ const GetNiubizTokenizerCard = async (
         else {
             const dataResponse = {
                 success: false,
-                code: "002",
-                data: response
+                code: "003",
+                data: response,
+                message: messageCode["003"]
             }
 
             return dataResponse
@@ -31,8 +33,10 @@ const GetNiubizTokenizerCard = async (
     } catch (error) {
         const dataResponse = {
             success: false,
-            code: "003",
-            data: error
+            code: "005",
+            data: error,
+            message: messageCode["005"],
+            url: url
         }
 
         return dataResponse;

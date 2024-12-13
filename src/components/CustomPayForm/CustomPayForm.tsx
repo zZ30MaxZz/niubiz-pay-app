@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import styles from "./customPayForm.module.scss";
 import { X } from "@phosphor-icons/react";
 import InputGroup from '../InputGroup/InputGroup';
-import { ErrorResponse, TokenizerResponse } from '../types';
+import { TokenizerResponse } from '../types';
 import { FinancialInstitution, getCardType } from '../../helper/card';
 import * as Yup from 'yup';
 import { useFormik } from "formik";
@@ -48,7 +48,6 @@ const CustomPayForm = forwardRef(({
 }: CustomPayProps, ref) => {
     const [showLoader, setShowLoader] = useState(false);
 
-    const [isFlipped, setIsFlipped] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
     const [brand, setBrand] = useState(FinancialInstitution.NotFound.name);
@@ -61,7 +60,6 @@ const CustomPayForm = forwardRef(({
 
 
     const [tokenizer, setTokenizer] = useState<TokenizerResponse | null>();
-    const [errorTokenizer, setErrorTokenizer] = useState<ErrorResponse | null>()
 
     let cardNumber: Promise<any>;
     let cardExpiry: Promise<any>;
@@ -132,14 +130,17 @@ const CustomPayForm = forwardRef(({
                     setShowLoader(false);
                 })
                 .catch(function (error) {
-                    console.dir(error)
-                    setErrorTokenizer(error as ErrorResponse);
-
                     setShowLoader(false);
-                    // onClose();
-                });
 
-            // onClose();
+                    const dataResponse = {
+                        success: false,
+                        code: "100",
+                        data: error,
+                        message: error
+                    }
+
+                    setFormResponse(dataResponse);
+                });
         }
     });
 
@@ -243,7 +244,7 @@ const CustomPayForm = forwardRef(({
             element.on('change', function (data: any) {
 
                 if (data.length > 0 && data[0].code === "invalid_expiry") {
-                    formik.setFieldError('cardExpirationDate', data[0].message);
+                    formik.setFieldError('cardExpiry', data[0].message);
                 }
                 else {
                     setCardExpiryState(cardExpiry);
@@ -260,14 +261,10 @@ const CustomPayForm = forwardRef(({
                 setFieldTouched('cardCvv', true);
 
                 if (data.length > 0 && data[0].code === "invalid_cvc") {
-                    setIsFlipped(true);
-
                     formik.setFieldError('cardCvv', data[0].message);
                 }
                 else {
                     setCardCvvState(cardCvv);
-
-                    setIsFlipped(false);
 
                     formik.setFieldValue('cardCvv', '123');
                     formik.setFieldError('cardCvv', '');
@@ -336,15 +333,7 @@ const CustomPayForm = forwardRef(({
 
                 const response = await PostNiubizAuthorize(url, tokenSecurity, data);
 
-                if (response) {
-                    const dataResponse = {
-                        success: response.success,
-                        code: "000",
-                        data: response.data
-                    }
-
-                    setFormResponse(dataResponse);
-                }
+                setFormResponse(response);
             }
         };
 

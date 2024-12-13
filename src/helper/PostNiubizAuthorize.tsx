@@ -1,3 +1,4 @@
+import { messageCode } from "components/messages";
 import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
@@ -39,8 +40,10 @@ const PostNiubizAuthorize = async (
   } catch (error) {
     const dataResponse = {
       success: false,
-      code: "003",
-      data: error
+      code: "005",
+      data: error,
+      message: messageCode["005"],
+      url: url
     }
 
     return dataResponse;

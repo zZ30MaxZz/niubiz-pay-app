@@ -130,19 +130,19 @@ const CustomForm: React.FC<CustomProps> = ({
                     setTokenizer(data as TokenizerResponse);
 
                     setShowLoader(false);
-                    // onClose();
                 })
                 .catch(function (error) {
                     setShowLoader(false);
 
                     const dataResponse = {
                         success: false,
-                        code: "001",
-                        data: error
+                        code: "100",
+                        data: error,
+                        message: error
                     }
 
                     setFormResponse(dataResponse);
-                    // onClose();
+                    onClose();
                 });
 
             // onClose();
@@ -246,9 +246,9 @@ const CustomForm: React.FC<CustomProps> = ({
 
         cardExpiry.then(element => {
             element.on('change', function (data: any) {
-
+                
                 if (data.length > 0 && data[0].code === "invalid_expiry") {
-                    formik.setFieldError('cardExpirationDate', data[0].message);
+                    formik.setFieldError('cardExpiry', data[0].message);
                 }
                 else {
                     setCardExpiryState(cardExpiry);
@@ -322,13 +322,7 @@ const CustomForm: React.FC<CustomProps> = ({
                 const url = `${baseUrl}${tokenizerService}/${merchandId}/${tokenizer.transactionToken}`;
                 const response = await GetNiubizTokenizerCard(url, tokenSecurity);
 
-                const dataResponse = {
-                    success: response.success,
-                    code: "000",
-                    data: response.data
-                }
-
-                setFormResponse(dataResponse);
+                setFormResponse(response);
 
                 onClose();
             }

@@ -98,6 +98,9 @@ const useNiubiz = (
       }
       else {
         setFormResponse(response);
+
+        setShowLoader(false);
+        setShowForm(false);
       }
     };
 
@@ -127,6 +130,9 @@ const useNiubiz = (
         }
         else {
           setFormResponse(response);
+
+          setShowLoader(false);
+          setShowForm(false);
         }
 
         setShowLoader(false);

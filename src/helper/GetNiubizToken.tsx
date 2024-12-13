@@ -1,3 +1,4 @@
+import { messageCode } from "components/messages";
 import { DataResponse } from "../components/types";
 import { fetcher } from "./fetcher";
 
@@ -11,7 +12,7 @@ const GetNiubizToken = async (
 
     try {
         const response = await fetcher(url, options, null, authorization);
-        
+
         if (response.success) {
             tokenSecurity = typeof response.data === "string" ? response.data : '';
 
@@ -26,8 +27,9 @@ const GetNiubizToken = async (
         else {
             const dataResponse = {
                 success: false,
-                code: "002",
-                data: response
+                code: "001",
+                data: response,
+                message: messageCode["001"]
             }
 
             return dataResponse
@@ -35,8 +37,10 @@ const GetNiubizToken = async (
     } catch (error) {
         const dataResponse = {
             success: false,
-            code: "003",
-            data: error
+            code: "005",
+            data: error,
+            message: messageCode["005"],
+            url: url
         }
 
         return dataResponse;
