@@ -1,6 +1,8 @@
+import Loader from 'components/Loader/Loader';
 import { MerchantDefineData } from 'components/types';
 import useNiubizPay from 'hooks/useNiubizPay';
 import React, { useEffect, useMemo } from 'react'
+import { MoonLoader } from 'react-spinners';
 
 const PayPage = () => {
     const [sessionKey, setsessionKey] = React.useState<string | null>(null);
@@ -79,7 +81,8 @@ const PayPage = () => {
         "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6",
         merchantId ?? "110777209",
         token,
-        sessionKey
+        sessionKey,
+        <Loader loader={MoonLoader} color='white' />
     );
 
     useEffect(() => {

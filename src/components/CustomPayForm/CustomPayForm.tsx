@@ -26,6 +26,7 @@ type CustomPayProps = {
     baseUrl: string,
     amount: string;
     onClose: () => void;
+    loader?: JSX.Element;
 };
 
 const CustomPayForm = forwardRef(({
@@ -44,7 +45,8 @@ const CustomPayForm = forwardRef(({
     tokenSecurity,
     baseUrl,
     amount,
-    onClose
+    onClose,
+    loader
 }: CustomPayProps, ref) => {
     const [showLoader, setShowLoader] = useState(false);
 
@@ -362,7 +364,7 @@ const CustomPayForm = forwardRef(({
 
     return (
         <>
-            {showLoader && <Loader color="#fff" size={40} />}
+            {showLoader && (loader ?? <Loader color="#fff" size={40} />)}
             <div className={styles.formContainer}>
                 <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formBody}>

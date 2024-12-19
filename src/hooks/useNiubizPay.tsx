@@ -29,7 +29,8 @@ const useNiubizPay = (
   credentialEncoded?: string | null,
   merchandId?: string | null,
   token?: string | null,
-  sessionKey?: string | null
+  sessionKey?: string | null,
+  loader?: JSX.Element
 ): UseNiubizPayReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -172,6 +173,7 @@ const useNiubizPay = (
         tokenSecurity={token ?? tokenSecurity}
         amount={amount}
         baseUrl={baseUrl}
+        loader={loader}
       /> :
       <></>;
 
