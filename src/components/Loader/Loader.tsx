@@ -5,14 +5,19 @@ import { DotLoader } from 'react-spinners';
 interface LoaderProps {
     size?: number;
     color?: string;
+    loader?: React.ElementType;
 }
 
-const Loader: React.FC<LoaderProps> = ({ size = 24, color = '#333' }) => {
+const Loader: React.FC<LoaderProps> = ({ size = 24, color = '#333', loader, ...rest }) => {
+    const CustomLoader = loader ?? DotLoader;
+
     return (
         <div className={styles.loaderContainer}>
-            <DotLoader
+            <CustomLoader
                 color={color ?? '#fff'}
-                size={size ?? 20} />
+                size={size ?? 20}
+                {...rest}
+            />
         </div>
     );
 };

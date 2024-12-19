@@ -1,6 +1,8 @@
+import Loader from 'components/Loader/Loader';
 import { MerchantDefineData } from 'components/types';
 import useNiubiz from 'hooks/useNiubiz';
 import React, { useEffect, useMemo } from 'react'
+import { MoonLoader } from 'react-spinners';
 
 const HomePage = () => {
     const [sessionKey, setsessionKey] = React.useState<string | null>(null);
@@ -81,7 +83,8 @@ const HomePage = () => {
         // null,
         merchantId ?? "110777209",
         token,
-        sessionKey
+        sessionKey,
+        <Loader loader={MoonLoader} color='white' />
     );
 
     useEffect(() => {

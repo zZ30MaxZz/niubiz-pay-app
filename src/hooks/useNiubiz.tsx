@@ -28,7 +28,8 @@ const useNiubiz = (
   credentialEncoded?: string | null,
   merchandId?: string | null,
   token?: string | null,
-  sessionKey?: string | null
+  sessionKey?: string | null,
+  loader?: JSX.Element
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -157,7 +158,7 @@ const useNiubiz = (
 
   const FormComponent =
     showLoader ?
-      <Loader color="#fff" size={40} /> :
+      loader ?? <Loader color="#fff" size={40} /> :
       showForm ?
         <CustomForm
           setFormResponse={setFormResponse}
@@ -173,6 +174,7 @@ const useNiubiz = (
           tokenSecurity={token ?? tokenSecurity}
           amount={amount}
           baseUrl={baseUrl}
+          loader={loader}
         /> :
         <></>;
 

@@ -24,6 +24,7 @@ type CustomProps = {
     baseUrl: string,
     amount: string;
     onClose: () => void;
+    loader?: JSX.Element
 };
 
 const CustomForm: React.FC<CustomProps> = ({
@@ -39,7 +40,8 @@ const CustomForm: React.FC<CustomProps> = ({
     tokenSecurity,
     baseUrl,
     amount,
-    onClose
+    onClose,
+    loader
 }) => {
     const [showLoader, setShowLoader] = useState(false);
 
@@ -246,7 +248,7 @@ const CustomForm: React.FC<CustomProps> = ({
 
         cardExpiry.then(element => {
             element.on('change', function (data: any) {
-                
+
                 if (data.length > 0 && data[0].code === "invalid_expiry") {
                     formik.setFieldError('cardExpiry', data[0].message);
                 }
@@ -356,7 +358,7 @@ const CustomForm: React.FC<CustomProps> = ({
     return (
         <>
             {/* <link rel="stylesheet" href={srcCss}></link> */}
-            {showLoader && <Loader color="#fff" size={40} />}
+            {showLoader && (loader ?? <Loader color="#fff" size={40} />)}
             <div className={styles.formContainer} onClick={handleOverlayClick}>
                 <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formHeader}>
