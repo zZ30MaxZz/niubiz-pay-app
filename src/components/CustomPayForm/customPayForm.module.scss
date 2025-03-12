@@ -26,6 +26,12 @@
     gap: 24px;
 }
 
+.formCardContainer {
+    width: 100%;
+    display: grid;
+    place-items: center;
+}
+
 .formInfoCard {
     display: flex;
     flex-direction: column;
@@ -205,4 +211,11 @@
     left: 0;
     background-color: rgba(0, 0, 0, 0.38);
     z-index: 1;
+}
+
+.buttonDisabled {
+    background-color: #F5F7F6;
+    color: #ABB5B2;
+    user-select: none;
+    touch-action: none;
 }
