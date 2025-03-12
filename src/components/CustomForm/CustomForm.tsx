@@ -240,7 +240,7 @@ const CustomForm: React.FC<CustomProps> = ({
 
                 setCardNumberState(cardNumber);
 
-                formik.setFieldValue('cardNumber', '123');
+                formik.setFieldValue('cardNumber', '***');
                 formik.setFieldError('cardNumber', '');
                 setFieldTouched('cardNumber', true);
             });
@@ -255,7 +255,7 @@ const CustomForm: React.FC<CustomProps> = ({
                 else {
                     setCardExpiryState(cardExpiry);
 
-                    formik.setFieldValue('cardExpiry', '123');
+                    formik.setFieldValue('cardExpiry', '***');
                     formik.setFieldError('cardExpiry', '');
                     setFieldTouched('cardExpiry', true);
                 }
@@ -276,7 +276,7 @@ const CustomForm: React.FC<CustomProps> = ({
 
                     setIsFlipped(false);
 
-                    formik.setFieldValue('cardCvv', '123');
+                    formik.setFieldValue('cardCvv', '***');
                     formik.setFieldError('cardCvv', '');
                     setFieldTouched('cardCvv', true);
                 }
@@ -324,7 +324,17 @@ const CustomForm: React.FC<CustomProps> = ({
                 const url = `${baseUrl}${tokenizerService}/${merchandId}/${tokenizer.transactionToken}`;
                 const response = await GetNiubizTokenizerCard(url, tokenSecurity);
 
-                setFormResponse(response);
+                const newResponse = {
+                    success: response.success,
+                    code: response.code,
+                    data: {
+                        ...response.data,
+                        user: { ...values }
+                    },
+                    message: response.message
+                }
+
+                setFormResponse(newResponse);
 
                 onClose();
             }

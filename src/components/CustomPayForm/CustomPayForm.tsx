@@ -89,9 +89,6 @@ const CustomPayForm = forwardRef(({
         cardLastname: Yup
             .string()
             .required('Ingresa el Apellido como figura en tu tarjeta.')
-            .max(50, 'No debe exceder los 50 caracteres'),
-        cardName: Yup
-            .string()
             .max(50, 'No debe exceder los 50 caracteres')
     });
 
@@ -102,7 +99,6 @@ const CustomPayForm = forwardRef(({
             cardCvv: '',
             cardFirstname: '',
             cardLastname: '',
-            cardName: ''
         },
         validationSchema: cardSchema,
         validateOnChange: true,
@@ -236,7 +232,7 @@ const CustomPayForm = forwardRef(({
 
                 setCardNumberState(cardNumber);
 
-                formik.setFieldValue('cardNumber', '123');
+                formik.setFieldValue('cardNumber', '***');
                 formik.setFieldError('cardNumber', '');
                 setFieldTouched('cardNumber', true);
             });
@@ -251,7 +247,7 @@ const CustomPayForm = forwardRef(({
                 else {
                     setCardExpiryState(cardExpiry);
 
-                    formik.setFieldValue('cardExpiry', '123');
+                    formik.setFieldValue('cardExpiry', '***');
                     formik.setFieldError('cardExpiry', '');
                     setFieldTouched('cardExpiry', true);
                 }
@@ -268,7 +264,7 @@ const CustomPayForm = forwardRef(({
                 else {
                     setCardCvvState(cardCvv);
 
-                    formik.setFieldValue('cardCvv', '123');
+                    formik.setFieldValue('cardCvv', '***');
                     formik.setFieldError('cardCvv', '');
                     setFieldTouched('cardCvv', true);
                 }
@@ -335,7 +331,17 @@ const CustomPayForm = forwardRef(({
 
                 const response = await PostNiubizAuthorize(url, tokenSecurity, data);
 
-                setFormResponse(response);
+                const newResponse = {
+                    success: response.success,
+                    code: response.code,
+                    data: {
+                        ...response.data,
+                        user: { ...values }
+                    },
+                    message: response.message
+                }
+
+                setFormResponse(newResponse);
             }
         };
 
