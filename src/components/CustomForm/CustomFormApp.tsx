@@ -503,7 +503,6 @@ const CustomForm: React.FC<CustomProps> = ({
                 </div>
                 <div className={styles.formFooter}>
                     <div className={styles.formButtonContainer}>
-                        <button className={styles.buttonSecondary} onClick={onClose}>Volver</button>
                         <button className={`${styles.buttonPrimary} ${!successForm && styles.buttonDisabled}`} onClick={handleTransactionToken}>Agregar</button>
                     </div>
                 </div>
