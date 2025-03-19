@@ -383,7 +383,7 @@ const CustomPayFormApp = forwardRef(({
     return (
         <>
             {showLoader && (loader ?? <Loader color="#fff" size={40} />)}
-            <div className={styles.formContainer}>
+            <div className={styles.formContainerApp}>
                 <div className={styles.formSection} ref={modalRef} >
                     <div className={styles.formBody}>
                         <div className={styles.formContent}>
