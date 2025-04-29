@@ -29,6 +29,7 @@ const useNiubiz = (
   merchandId?: string | null,
   token?: string | null,
   sessionKey?: string | null,
+  showSaveCard?: boolean,
   loader?: JSX.Element
 ): UseNiubizReturn => {
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -175,6 +176,7 @@ const useNiubiz = (
           amount={amount}
           baseUrl={baseUrl}
           loader={loader}
+          showSaveCard={showSaveCard}
         /> :
         <></>;
 

@@ -24,6 +24,7 @@ type CustomProps = {
     baseUrl: string,
     amount: string;
     onClose: () => void;
+    showSaveCard?: boolean,
     loader?: JSX.Element
 };
 
@@ -41,7 +42,8 @@ const CustomForm: React.FC<CustomProps> = ({
     baseUrl,
     amount,
     onClose,
-    loader
+    loader,
+    showSaveCard = true
 }) => {
     const [showLoader, setShowLoader] = useState(false);
 
@@ -444,42 +446,46 @@ const CustomForm: React.FC<CustomProps> = ({
                                         callbackOnChange={handleInputChange}
                                         maxLength={50} />
                                 </div>
-                                <div className={styles.formRow}>
-                                    <InputGroup
-                                        id='cardName'
-                                        label='Nombre para la tarjeta a guardar'
-                                        type='text'
-                                        name='cardName'
-                                        value={values.cardName}
-                                        error={touched.cardName ? errors.cardName : ''}
-                                        callbackOnChange={handleInputChange}
-                                        maxLength={50} />
-                                </div>
-                                <div className={styles.formRow}>
-                                    <div className={styles.inputContainer}>
-                                        <div className={styles.formCheckboxContainer}>
-                                            <input
-                                                type="checkbox"
-                                                id='favoriteCard'
-                                                name='favoriteCard'
-                                                checked={values.favoriteCard}
-                                                className={`${styles.formCheckbox} ${errors.favoriteCard && styles.formError}`}
-                                                onChange={handleInputChange}
-                                            />
-                                            <label
-                                                htmlFor="favoriteCard"
-                                                className={styles.formCheckboxLabel}
-                                            >Guardar tu tarjeta para futura compras</label>
-                                        </div>
-                                        {
-                                            errors.favoriteCard &&
-                                            <div className={styles.inputErrorContainer}>
-                                                <X size={20} color="#C82014" />
-                                                <div className={styles.inputError}>{errors.favoriteCard}</div>
-                                            </div>
-                                        }
+                                {values.favoriteCard &&
+                                    <div className={styles.formRow}>
+                                        <InputGroup
+                                            id='cardName'
+                                            label='Nombre para la tarjeta a guardar'
+                                            type='text'
+                                            name='cardName'
+                                            value={values.cardName}
+                                            error={touched.cardName ? errors.cardName : ''}
+                                            callbackOnChange={handleInputChange}
+                                            maxLength={50} />
                                     </div>
-                                </div>
+                                }
+                                {showSaveCard &&
+                                    <div className={styles.formRow}>
+                                        <div className={styles.inputContainer}>
+                                            <div className={styles.formCheckboxContainer}>
+                                                <input
+                                                    type="checkbox"
+                                                    id='favoriteCard'
+                                                    name='favoriteCard'
+                                                    checked={values.favoriteCard}
+                                                    className={`${styles.formCheckbox} ${errors.favoriteCard && styles.formError}`}
+                                                    onChange={handleInputChange}
+                                                />
+                                                <label
+                                                    htmlFor="favoriteCard"
+                                                    className={styles.formCheckboxLabel}
+                                                >Guardar tu tarjeta para futura compras</label>
+                                            </div>
+                                            {
+                                                errors.favoriteCard &&
+                                                <div className={styles.inputErrorContainer}>
+                                                    <X size={20} color="#C82014" />
+                                                    <div className={styles.inputError}>{errors.favoriteCard}</div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
                                 <div className={styles.formRow}>
                                     <div className={styles.inputContainer}>
                                         <div className={styles.formCheckboxContainer}>

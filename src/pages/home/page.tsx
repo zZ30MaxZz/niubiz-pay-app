@@ -84,6 +84,7 @@ const HomePage = () => {
         merchantId ?? "110777209",
         token,
         sessionKey,
+        true,
         <Loader loader={MoonLoader} color='white' />
     );
 
