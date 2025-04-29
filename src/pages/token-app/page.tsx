@@ -1,6 +1,5 @@
 import Loader from 'components/Loader/Loader';
 import { MerchantDefineData } from 'components/types';
-import useNiubiz from 'hooks/useNiubiz';
 import useNiubizApp from 'hooks/useNiubizApp';
 import React, { useEffect, useMemo } from 'react'
 import { MoonLoader } from 'react-spinners';
@@ -85,6 +84,7 @@ const TokenAppPage = () => {
         merchantId ?? "110777209",
         token,
         sessionKey,
+        true,
         <Loader loader={MoonLoader} color='white' />
     );
 
