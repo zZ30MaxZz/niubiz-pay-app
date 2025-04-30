@@ -24,7 +24,9 @@ type CustomProps = {
     baseUrl: string,
     amount: string;
     onClose: () => void;
-    showSaveCard?: boolean,
+    showAliasCard?: boolean,
+    showCheckSaveCard?: boolean,
+    buttonText?: string,
     loader?: JSX.Element
 };
 
@@ -43,7 +45,9 @@ const CustomForm: React.FC<CustomProps> = ({
     amount,
     onClose,
     loader,
-    showSaveCard = true
+    showAliasCard = true,
+    showCheckSaveCard = true,
+    buttonText = 'Agregar'
 }) => {
     const [showLoader, setShowLoader] = useState(false);
 
@@ -439,7 +443,7 @@ const CustomForm: React.FC<CustomProps> = ({
                                     callbackOnChange={handleInputChange}
                                     maxLength={50} />
                             </div>
-                            {values.favoriteCard &&
+                            {(showAliasCard || values.favoriteCard) &&
                                 <div className={styles.formRow}>
                                     <InputGroup
                                         id='cardName'
@@ -452,7 +456,7 @@ const CustomForm: React.FC<CustomProps> = ({
                                         maxLength={50} />
                                 </div>
                             }
-                            {showSaveCard &&
+                            {showCheckSaveCard &&
                                 <div className={styles.formRow}>
                                     <div className={styles.inputContainer}>
                                         <div className={styles.formCheckboxContainer}>
@@ -509,7 +513,7 @@ const CustomForm: React.FC<CustomProps> = ({
                 </div>
                 <div className={styles.formFooter}>
                     <div className={styles.formButtonContainer}>
-                        <button className={`${styles.buttonPrimary} ${!successForm && styles.buttonDisabled}`} onClick={handleTransactionToken}>Agregar</button>
+                        <button className={`${styles.buttonPrimary} ${!successForm && styles.buttonDisabled}`} onClick={handleTransactionToken}>{buttonText}</button>
                     </div>
                 </div>
             </div>
