@@ -15,16 +15,12 @@ import CustomTokenFormApp from "components/CustomForm/CustomTokenFormApp";
 const useNiubizTokenApp = (
   userEmail: string,
   purchasenumber: number,
-  baseUrl: string,
-  tokenService: string,
-  sessionService: string,
   srcCustomScript: string,
   srcCustomCss: string,
   MDD: MerchantDefineData,
   channelSession: string,
   channelToken: string,
   amount: string,
-  credentialEncoded?: string | null,
   merchandId?: string | null,
   token?: string | null,
   sessionKey?: string | null,
@@ -33,6 +29,11 @@ const useNiubizTokenApp = (
   buttonText?: string,
   loader?: JSX.Element
 ): UseNiubizReturn => {
+  const baseUrl = "https://apisandbox.vnforappstest.com";
+  const tokenService = "/api.security/v1/security";
+  const sessionService = "/api.ecommerce/v2/ecommerce/token/session";
+  const credentialEncoded = "Z2lhbmNhZ2FsbGFyZG9AZ21haWwuY29tOkF2MyR0cnV6";
+
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const [scriptsLoaded, setScriptsLoaded] = useState<boolean>(false);
