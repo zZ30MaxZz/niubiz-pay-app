@@ -120,7 +120,6 @@ const CustomTokenPayForm = forwardRef(({
                     setFormResponse(newResponse);
 
                     setShowLoader(false);
-                    onClose();
                 })
                 .catch(function (error) {
                     setShowLoader(false);
