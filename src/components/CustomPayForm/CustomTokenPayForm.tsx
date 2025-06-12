@@ -9,36 +9,26 @@ import { useFormik } from "formik";
 import Loader from '../Loader/Loader';
 
 type CustomPayProps = {
-    documentType: string,
-    documentUser: string,
     setFormResponse: any;
     showForm: boolean;
-    showBlocked: boolean;
-    srcCss: string;
     tokenSession?: string;
     merchandId: string,
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
-    baseUrl: string,
     amount: string;
     onClose: () => void;
     loader?: JSX.Element;
 };
 
 const CustomTokenPayForm = forwardRef(({
-    documentType,
-    documentUser,
     setFormResponse,
     showForm,
-    showBlocked,
-    srcCss,
     tokenSession,
     merchandId,
     purchasenumber,
     userEmail,
     channelToken,
-    baseUrl,
     amount,
     onClose,
     loader
@@ -130,6 +120,7 @@ const CustomTokenPayForm = forwardRef(({
                     setFormResponse(newResponse);
 
                     setShowLoader(false);
+                    onClose();
                 })
                 .catch(function (error) {
                     setShowLoader(false);
@@ -311,7 +302,7 @@ const CustomTokenPayForm = forwardRef(({
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name } = e.target;
 
         setFieldTouched(name, true);
         handleChange(e);
