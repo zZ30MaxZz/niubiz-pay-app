@@ -12,13 +12,11 @@ import Loader from '../Loader/Loader';
 type CustomProps = {
     setFormResponse: any;
     showForm: boolean;
-    srcCss: string;
     tokenSession?: string;
     merchandId: string,
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
-    baseUrl: string,
     amount: string;
     onClose: () => void;
     showAliasCard?: boolean,
@@ -30,13 +28,11 @@ type CustomProps = {
 const CustomTokenForm: React.FC<CustomProps> = ({
     setFormResponse,
     showForm,
-    srcCss,
     tokenSession,
     merchandId,
     purchasenumber,
     userEmail,
     channelToken,
-    baseUrl,
     amount,
     onClose,
     loader,
@@ -157,8 +153,6 @@ const CustomTokenForm: React.FC<CustomProps> = ({
                     setFormResponse(dataResponse);
                     onClose();
                 });
-
-            // onClose();
         }
     });
 
@@ -312,7 +306,7 @@ const CustomTokenForm: React.FC<CustomProps> = ({
 
         initSetting()
 
-    }, [tokenSession, merchandId, purchasenumber, channelToken]);
+    }, [tokenSession, merchandId, purchasenumber, channelToken, amount]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -334,7 +328,7 @@ const CustomTokenForm: React.FC<CustomProps> = ({
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name } = e.target;
 
         setFieldTouched(name, true);
         handleChange(e);
@@ -346,13 +340,12 @@ const CustomTokenForm: React.FC<CustomProps> = ({
 
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-            // onClose();
+            // onClose(); //Close modal on overlay
         }
     };
 
     return (
         <>
-            {/* <link rel="stylesheet" href={srcCss}></link> */}
             {showLoader && (loader ?? <Loader color="#fff" size={40} />)}
             <div className={styles.formContainer} onClick={handleOverlayClick}>
                 <div className={styles.formSection} ref={modalRef} >
