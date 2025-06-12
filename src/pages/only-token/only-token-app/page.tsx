@@ -1,101 +1,68 @@
 import Loader from 'components/Loader/Loader';
-import { MerchantDefineData } from 'components/types';
+import { usePaymentSessionToken } from 'helper/generateTokenSession';
+import { CHANEL_PAYCARD } from 'helper/variables';
 import useNiubizTokenApp from 'hooks/useNiubizTokenApp';
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { MoonLoader } from 'react-spinners';
 
 const OnlyTokenAppPage = () => {
-    const [sessionKey, setsessionKey] = React.useState<string | null>(null);
-    const [token, setToken] = React.useState<string | null>(null);
-    const [merchantId, setMerchantId] = React.useState<string | null>(null);
+  const amount = "1";
+  const email = "test@mail.com";
+  const customTxtBtn = "Tokenizar Btn";
 
-    const amount = "1";
+  const {
+    sessionKey,
+    authorization,
+    merchantId,
+    loading,
+    error,
+    fetchToken,
+  } = usePaymentSessionToken(CHANEL_PAYCARD, email);
 
-    const MDD: MerchantDefineData = useMemo(() => ({
-        MDD4: 'mail@mail.com',
-        MDD32: '12345789',
-        MDD75: 'Registrado',
-        MDD77: '0',
-    }), []);
+  const generateToken = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    const generateToken = async (e: React.FormEvent) => {
-        e.preventDefault();
+    await fetchToken();
+  };
 
-        const bodyData = {
-            Channel: "web",
-            Amount: amount,
-            Currency: "PEN",
-        };
+  const { FormComponent, triggerOpenForm, formResponse } = useNiubizTokenApp(
+    "userniubiz@mail.com",
+    Math.floor(Math.random() * 120000) + 1,
+    "https://pocpaymentserve.s3.amazonaws.com/payform.min.js",
+    "paycard",
+    amount,
+    merchantId ?? "110777209",
+    sessionKey,
+    false,
+    true,
+    customTxtBtn,
+    <Loader loader={MoonLoader} color='white' />
+  );
 
-        try {
-            const response = await fetch("https://6s5x6zwwg3.execute-api.us-east-1.amazonaws.com/dev/api.payments/v1/payment/tokenize", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(bodyData),
-            });
+  useEffect(() => {
+    if (!loading && !error && sessionKey && authorization && merchantId) {
+      console.log('Token generado: ', sessionKey, authorization, merchantId);
+      triggerOpenForm()
+    }
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
-            }
+  }, [loading, error, sessionKey, authorization, merchantId, triggerOpenForm]);
 
-            const data: {
-                data: {
-                    sessionKey: string;
-                    expirationTime: number;
-                    authorization: string;
-                    merchantId: string;
-                };
-                isSuccess: boolean;
-                message: string;
-            } = await response.json();
 
-            if (data.isSuccess) {
-                setToken(data.data.authorization);
-                setsessionKey(data.data.sessionKey);
-                setMerchantId(data.data.merchantId);
-            } else {
-                console.error("Request failed with message:", data.message);
-            }
-        } catch (error) {
-            console.error("Request failed:", (error as Error).message);
-        }
-    };
+  useEffect(() => {
+    console.log('Respuesta del formulario TOKENIZER APP 😁', formResponse);
 
-    const { FormComponent, triggerOpenForm, formResponse } = useNiubizTokenApp(
-        "userniubiz@mail.com",
-        Math.floor(Math.random() * 120000) + 1,
-        "https://pocpaymentserve.s3.amazonaws.com/payform.min.js",
-        "https://pocpaymentserve.s3.amazonaws.com/payform.min.css",
-        MDD,
-        "paycard",
-        "paycard",
-        amount,
-        merchantId ?? "110777209",
-        token,
-        sessionKey,
-        false,
-        true,
-        'Recargar',
-        <Loader loader={MoonLoader} color='white' />
-    );
+  }, [formResponse])
 
-    useEffect(() => {
-        console.log('Respuesta del formulario TOKENIZER APP 😁', formResponse);
-
-    }, [formResponse])
-
-    return (
-        <div>
-            <div>
-                <button onClick={generateToken}>Generar Token y Session</button>
-                <div>TOKEN: {token}</div>
-                <div>SESSION: {sessionKey}</div>
-            </div>
-            <button onClick={triggerOpenForm}>Open Form</button>
-            {FormComponent}
-        </div >
-    )
+  return (
+    <div>
+      <div>
+        <button onClick={generateToken}>Generar Token y Session</button>
+        <div>TOKEN: {authorization}</div>
+        <div>SESSION: {sessionKey}</div>
+      </div>
+      <button onClick={triggerOpenForm}>Open Form</button>
+      {FormComponent}
+    </div >
+  )
 }
 export default OnlyTokenAppPage

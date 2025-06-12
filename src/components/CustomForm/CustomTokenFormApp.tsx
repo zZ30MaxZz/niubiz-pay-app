@@ -12,13 +12,11 @@ import Loader from '../Loader/Loader';
 type CustomProps = {
     setFormResponse: any;
     showForm: boolean;
-    srcCss: string;
     tokenSession?: string;
     merchandId: string,
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
-    baseUrl: string,
     amount: string;
     onClose: () => void;
     showAliasCard?: boolean,
@@ -30,13 +28,11 @@ type CustomProps = {
 const CustomTokenFormApp: React.FC<CustomProps> = ({
     setFormResponse,
     showForm,
-    srcCss,
     tokenSession,
     merchandId,
     purchasenumber,
     userEmail,
     channelToken,
-    baseUrl,
     amount,
     onClose,
     loader,
@@ -157,8 +153,6 @@ const CustomTokenFormApp: React.FC<CustomProps> = ({
                     setFormResponse(dataResponse);
                     onClose();
                 });
-
-            // onClose();
         }
     });
 
@@ -312,7 +306,7 @@ const CustomTokenFormApp: React.FC<CustomProps> = ({
 
         initSetting()
 
-    }, [tokenSession, merchandId, purchasenumber, channelToken]);
+    }, [tokenSession, merchandId, purchasenumber, channelToken, amount]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -346,7 +340,6 @@ const CustomTokenFormApp: React.FC<CustomProps> = ({
 
     return (
         <>
-            {/* <link rel="stylesheet" href={srcCss}></link> */}
             {showLoader && (loader ?? <Loader color="#fff" size={40} />)}
             <div className={styles.formSectionApp} ref={modalRef} >
                 <div className={styles.formBodyApp}>
