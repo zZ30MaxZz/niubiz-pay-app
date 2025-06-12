@@ -1,5 +1,5 @@
 import React, { } from 'react';
-import styles from "./card.module.scss";
+import styles from "./cardDesign.module.scss";
 import IconHolder from '../Icon/Holder';
 import { FinancialInstitution } from '../../helper/card';
 
@@ -14,15 +14,13 @@ type CustomProps = {
     brandIcon?: string;
 };
 
-const Card: React.FC<CustomProps> = ({
+const CardDesign: React.FC<CustomProps> = ({
     isFlipped = false,
     number = '**** **** **** ****',
     dateYear = 'AA',
     dateMonth = 'MM',
-    cvv = '****',
     owner = 'Nombre del titular',
-    brand,
-    brandIcon,
+    brand
 }) => {
     number = number ? number : '**** **** **** ****';
     dateYear = dateYear ? dateYear : 'AA';
@@ -61,4 +59,4 @@ const Card: React.FC<CustomProps> = ({
     );
 };
 
-export default Card;
+export default CardDesign;

@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { useFormik } from "formik";
 import Loader from '../Loader/Loader';
 import PostNiubizAuthorize from 'helper/PostNiubizAuthorize';
-import Card from 'components/Card/Card';
+import CardDesign from 'components/Card/CardDesign';
 
 type CustomPayProps = {
     documentType: string,
@@ -388,7 +388,7 @@ const CustomPayFormApp = forwardRef(({
                     <div className={styles.formBody}>
                         <div className={styles.formContent}>
                             <div className={styles.formCardContainer}>
-                                <Card
+                                <CardDesign
                                     isFlipped={isFlipped}
                                     number={lastNumbers}
                                     cvv={values.cardCvv}

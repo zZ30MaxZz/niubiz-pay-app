@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./customForm.module.scss";
 import { X } from "@phosphor-icons/react";
-import Card from '../Card/Card';
+import CardDesign from '../Card/CardDesign';
 import InputGroup from '../InputGroup/InputGroup';
 import { TokenizerResponse } from '../types';
 import { FinancialInstitution, getCardType } from '../../helper/card';
@@ -345,7 +345,7 @@ const CustomTokenFormApp: React.FC<CustomProps> = ({
                 <div className={styles.formBodyApp}>
                     <div className={styles.formContent}>
                         <div className={styles.formCardContainer}>
-                            <Card
+                            <CardDesign
                                 isFlipped={isFlipped}
                                 number={lastNumbers}
                                 cvv={values.cardCvv}

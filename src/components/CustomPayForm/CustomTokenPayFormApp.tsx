@@ -7,7 +7,7 @@ import { FinancialInstitution, getCardType } from '../../helper/card';
 import * as Yup from 'yup';
 import { useFormik } from "formik";
 import Loader from '../Loader/Loader';
-import Card from 'components/Card/Card';
+import CardDesign from 'components/Card/CardDesign';
 
 type CustomPayProps = {
     setFormResponse: any;
@@ -340,7 +340,7 @@ const CustomTokenPayFormApp = forwardRef(({
                     <div className={styles.formBody}>
                         <div className={styles.formContent}>
                             <div className={styles.formCardContainer}>
-                                <Card
+                                <CardDesign
                                     isFlipped={isFlipped}
                                     number={lastNumbers}
                                     cvv={values.cardCvv}
