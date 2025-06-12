@@ -10,36 +10,26 @@ import Loader from '../Loader/Loader';
 import Card from 'components/Card/Card';
 
 type CustomPayProps = {
-    documentType: string,
-    documentUser: string,
     setFormResponse: any;
     showForm: boolean;
-    showBlocked: boolean;
-    srcCss: string;
     tokenSession?: string;
     merchandId: string,
     purchasenumber: number,
     userEmail: string,
     channelToken: string,
-    baseUrl: string,
     amount: string;
     onClose: () => void;
     loader?: JSX.Element;
 };
 
 const CustomTokenPayFormApp = forwardRef(({
-    documentType,
-    documentUser,
     setFormResponse,
     showForm,
-    showBlocked,
-    srcCss,
     tokenSession,
     merchandId,
     purchasenumber,
     userEmail,
     channelToken,
-    baseUrl,
     amount,
     onClose,
     loader
@@ -137,6 +127,7 @@ const CustomTokenPayFormApp = forwardRef(({
                     setFormResponse(newResponse);
 
                     setShowLoader(false);
+                    onClose();
                 })
                 .catch(function (error) {
                     setShowLoader(false);
@@ -323,7 +314,7 @@ const CustomTokenPayFormApp = forwardRef(({
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name } = e.target;
 
         setFieldTouched(name, true);
         handleChange(e);
