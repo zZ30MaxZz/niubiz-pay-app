@@ -1,0 +1,174 @@
+.card {
+    height: 160px;
+    width: 280px;
+}
+
+.cardSection {
+    height: 160px;
+    width: 280px;
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+    perspective: 1000px;
+}
+
+.cardBody {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    border-radius: 8px;
+    backface-visibility: hidden;
+    transition: transform 0.5s ease-in-out;
+}
+
+.cardBodyFront {
+    transform: rotateY(0deg);
+    background-color: #EEE;
+    z-index: 2;
+}
+
+.cardBodyBack {
+    transform: rotateY(180deg);
+    background-color: #EEE;
+}
+
+.cardFlipped .cardBodyFront {
+    transform: rotateY(180deg);
+}
+
+.cardFlipped .cardBodyBack {
+    transform: rotateY(360deg);
+}
+
+.cardBodyResume {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    padding: 16px 16px 18px 16px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.cardBrand {
+    color: #F5F7F6;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    margin-bottom: 16px;
+}
+
+.cardNumber {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    margin-bottom: 16px;
+}
+
+.cardDate {
+    color: #1C201E;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.cardOwner {
+    color: #1C201E;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.cardBrandIconContainer {
+    position: absolute;
+    right: 16px;
+    bottom: 18px;
+    height: 26px;
+    width: 38px;
+}
+
+.cardMagneticTape {
+    width: 100%;
+    height: 23px;
+    background-color: #868686;
+    top: 29px;
+    position: absolute;
+}
+
+.cardHolderContainer {
+    position: absolute;
+    top: 66px;
+    left: 16px;
+}
+
+.cardCvv {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    position: absolute;
+    top: 66px;
+    right: 16px;
+}
+
+//Color
+
+.faVisa {
+    background-color: #2847d9;
+
+    .cardMagneticTape {
+        background-color: #0614b9;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
+}
+
+.faMastercard {
+    background-color: #D2D2D2;
+
+    .cardMagneticTape {
+        background-color: #adadad;
+    }
+}
+
+.faAmex {
+    background-color: #434343;
+
+    .cardMagneticTape {
+        background-color: #222222;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
+}
+
+.faDinersClub {
+    background-color: #0079BE;
+
+    .cardMagneticTape {
+        background-color: #00398e;
+    }
+
+    .cardNumber,
+    .cardDate,
+    .cardOwner,
+    .cardCvv {
+        color: #fff;
+    }
+}
